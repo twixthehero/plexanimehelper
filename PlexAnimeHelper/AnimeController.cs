@@ -11,7 +11,7 @@ namespace PlexAnimeHelper
 		private Settings settings = new Settings();
 
 		private PlexAnimeHelper helper;
-		private List<Anime> animes = new List<Anime>();
+		private SortedList<int, Anime> animes = new SortedList<int, Anime>();
 
 		public Anime Selected { get; set; }
 		private Season LeftSeason { get; set; }
@@ -121,7 +121,7 @@ namespace PlexAnimeHelper
 
 		private void AddAnime(Anime anime)
 		{
-			animes.Add(anime);
+			animes.Add(animes.Count, anime);
 			Selected = anime;
 			LeftSeason = Selected.Seasons[0];
 			RightSeason = Selected.Seasons[1];
@@ -142,6 +142,12 @@ namespace PlexAnimeHelper
 		public int GetNumSeasons()
 		{
 			return Selected.NumberSeasons;
+		}
+
+		public void SetSelected(int index)
+		{
+			Selected = animes[index];
+			Console.WriteLine($"Selected {Selected}");
 		}
 
 		public void SetName(string name)
@@ -199,9 +205,9 @@ namespace PlexAnimeHelper
 								e.Path = dest;
 								break;
 							}
-							catch (UnauthorizedAccessException uae)
+							catch (Exception ee)
 							{
-								result = MessageBox.Show(uae.Message, "Failed to move file", MessageBoxButtons.AbortRetryIgnore);
+								result = MessageBox.Show(ee.Message, "Failed to move file", MessageBoxButtons.AbortRetryIgnore);
 
 								if (result == DialogResult.Abort || result == DialogResult.Cancel)
 								{

@@ -36,7 +36,7 @@ namespace PlexAnimeHelper
 		{
 			Console.WriteLine("Registering events");
 
-			
+			controller.SetSelected(animeTabs.SelectedIndex);
 
 			AnimeNameBox.TextChanged += AnimeName_TextChanged;
 			SeasonsBox.ValueChanged += Seasons_ValueChanged;

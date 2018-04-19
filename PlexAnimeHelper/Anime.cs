@@ -20,6 +20,7 @@ namespace PlexAnimeHelper
 			Seasons.Add(0, new Season(0)); //unsorted eps are here | deleted season eps are moved here
 			Seasons.Add(1, new Season(1));
 			
+			//todo - fix bug where path doesn't exist
 			foreach (string file in Directory.GetFiles(FolderPath).Where(s => EXTENSIONS.Contains(Path.GetExtension(s))))
 			{
 				Seasons[0].AddUnsortedEpisode(file);
@@ -44,6 +45,11 @@ namespace PlexAnimeHelper
 				Console.WriteLine($"Adding season {i}");
 				Seasons.Add(i, new Season(i));
 				string seasonPath = Path.Combine(FolderPath, $"Season {i:00}");
+
+				if (!Directory.Exists(seasonPath))
+				{
+					continue;
+				}
 
 				string[] files = Directory.GetFiles(seasonPath);
 
