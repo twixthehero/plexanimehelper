@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 
 namespace PlexAnimeHelper
@@ -12,6 +11,28 @@ namespace PlexAnimeHelper
 
 		public List<string> ManagedAnime { get; private set; } = new List<string>();
 
+		public void Add(string path)
+		{
+			if (!ManagedAnime.Contains(path))
+			{
+				Log.I($"Added '{path}' to watch list");
+				ManagedAnime.Add(path);
+			}
+		}
+
+		public void Remove(string path)
+		{
+			if (ManagedAnime.Contains(path))
+			{
+				Log.I($"Removing '{path}' from watch list");
+				ManagedAnime.Remove(path);
+			}
+			else
+			{
+				Log.W($"'{path}' is not watched!");
+			}
+		}
+
 		public void Save()
 		{
 			FileStream fs = File.Open(DATA_FILE, FileMode.Create, FileAccess.Write, FileShare.None);
@@ -19,7 +40,9 @@ namespace PlexAnimeHelper
 			{
 				AutoFlush = true
 			};
-			
+
+			ManagedAnime.Sort();
+
 			foreach (string path in ManagedAnime)
 			{
 				w.WriteLine($"path={path}");
@@ -38,8 +61,13 @@ namespace PlexAnimeHelper
 
 				while ((line = r.ReadLine()) != null)
 				{
+					if (line.Length == 0 || line.StartsWith("#"))
+					{
+						continue;
+					}
+
 					string path = line.Split('=')[1];
-					Console.WriteLine($"Found path {path}");
+					Log.I($"Found path '{path}'");
 					ManagedAnime.Add(path);
 				}
 

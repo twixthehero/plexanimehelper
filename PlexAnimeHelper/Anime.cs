@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
@@ -33,16 +32,18 @@ namespace PlexAnimeHelper
 			FolderPath = path;
 			Seasons.Add(0, new Season(0)); //unsorted eps are here | deleted season eps are moved here
 
+			Log.I("==========================================================================");
+
 			//add unsorted eps
 			foreach (string file in Directory.GetFiles(FolderPath).Where(s => EXTENSIONS.Contains(Path.GetExtension(s))))
 			{
-				Console.WriteLine($"Adding unsorted ep: {file}");
+				Log.I($"Adding unsorted ep: {file}");
 				Seasons[0].AddUnsortedEpisode(file);
 			}
 
 			for (int i = 1; i <= numSeasons; i++)
 			{
-				Console.WriteLine($"Adding season {i}");
+				Log.I($"Adding season {i}");
 				Seasons.Add(i, new Season(i));
 				string seasonPath = Path.Combine(FolderPath, $"Season {i:00}");
 
@@ -58,7 +59,7 @@ namespace PlexAnimeHelper
 					files.Where(s => EXTENSIONS.Contains(Path.GetExtension(s)) &&
 					!Path.GetFileNameWithoutExtension(s).StartsWith(name)))
 				{
-					Console.WriteLine($"Adding unsorted ep: {file}");
+					Log.I($"Adding unsorted ep: {file}");
 					Seasons[0].AddUnsortedEpisode(file);
 				}
 
@@ -74,7 +75,7 @@ namespace PlexAnimeHelper
 					int seasonNum = int.Parse(epName.Substring(sIndex + 1, eIndex - (sIndex + 1)));
 					int epNum = int.Parse(epName.Substring(eIndex + 1));
 
-					Console.WriteLine($"Adding ep: {epName} | {animeName} | {seasonNum} | {epNum}");
+					Log.I($"Adding ep: {epName} | {animeName} | {seasonNum} | {epNum}");
 
 					//if ep data is correct
 					if (Name == animeName && seasonNum == i)

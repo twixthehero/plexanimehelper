@@ -36,12 +36,15 @@
 			this.folderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
 			this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
+			this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
 			this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
 			this.aboutToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
 			this.animeTabs = new System.Windows.Forms.TabControl();
-			this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+			this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
 			this.menuStrip1.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -63,8 +66,11 @@
             this.addToolStripMenuItem,
             this.toolStripSeparator2,
             this.saveToolStripMenuItem,
+            this.toolStripMenuItem2,
             this.toolStripMenuItem1,
             this.toolStripSeparator1,
+            this.toolStripMenuItem3,
+            this.toolStripSeparator3,
             this.exitToolStripMenuItem});
 			this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
 			this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
@@ -89,14 +95,14 @@
 			// episodesToolStripMenuItem
 			// 
 			this.episodesToolStripMenuItem.Name = "episodesToolStripMenuItem";
-			this.episodesToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+			this.episodesToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
 			this.episodesToolStripMenuItem.Text = "Episodes...";
 			this.episodesToolStripMenuItem.Click += new System.EventHandler(this.EpisodesToolStripMenuItem_Click);
 			// 
 			// folderToolStripMenuItem
 			// 
 			this.folderToolStripMenuItem.Name = "folderToolStripMenuItem";
-			this.folderToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+			this.folderToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
 			this.folderToolStripMenuItem.Text = "Folder...";
 			this.folderToolStripMenuItem.Click += new System.EventHandler(this.FolderToolStripMenuItem_Click);
 			// 
@@ -109,13 +115,32 @@
 			// 
 			this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
 			this.saveToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
-			this.saveToolStripMenuItem.Text = "Save";
-			this.saveToolStripMenuItem.Click += new System.EventHandler(this.SaveToolStripMenuItem_Click);
+			this.saveToolStripMenuItem.Text = "Save Tab";
+			this.saveToolStripMenuItem.Click += new System.EventHandler(this.SaveTab_Click);
+			// 
+			// toolStripMenuItem1
+			// 
+			this.toolStripMenuItem1.Name = "toolStripMenuItem1";
+			this.toolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
+			this.toolStripMenuItem1.Text = "Close Tab";
+			this.toolStripMenuItem1.Click += new System.EventHandler(this.CloseTab_Click);
 			// 
 			// toolStripSeparator1
 			// 
 			this.toolStripSeparator1.Name = "toolStripSeparator1";
 			this.toolStripSeparator1.Size = new System.Drawing.Size(177, 6);
+			// 
+			// toolStripMenuItem2
+			// 
+			this.toolStripMenuItem2.Name = "toolStripMenuItem2";
+			this.toolStripMenuItem2.Size = new System.Drawing.Size(180, 22);
+			this.toolStripMenuItem2.Text = "Save All Tabs";
+			this.toolStripMenuItem2.Click += new System.EventHandler(this.SaveAll_Click);
+			// 
+			// toolStripSeparator3
+			// 
+			this.toolStripSeparator3.Name = "toolStripSeparator3";
+			this.toolStripSeparator3.Size = new System.Drawing.Size(177, 6);
 			// 
 			// exitToolStripMenuItem
 			// 
@@ -149,11 +174,12 @@
 			this.animeTabs.Selecting += new System.Windows.Forms.TabControlCancelEventHandler(this.AnimeTabs_Selecting);
 			this.animeTabs.Selected += new System.Windows.Forms.TabControlEventHandler(this.AnimeTabs_Selected);
 			// 
-			// toolStripMenuItem1
+			// toolStripMenuItem3
 			// 
-			this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-			this.toolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
-			this.toolStripMenuItem1.Text = "Close Tab";
+			this.toolStripMenuItem3.Name = "toolStripMenuItem3";
+			this.toolStripMenuItem3.Size = new System.Drawing.Size(180, 22);
+			this.toolStripMenuItem3.Text = "Save Anime List";
+			this.toolStripMenuItem3.Click += new System.EventHandler(this.SaveAnimeList_Click);
 			// 
 			// PlexAnimeHelper
 			// 
@@ -188,6 +214,9 @@
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
 		private System.Windows.Forms.TabControl animeTabs;
 		private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
+		private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem2;
+		private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
+		private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem3;
 	}
 }
 

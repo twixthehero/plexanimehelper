@@ -56,7 +56,9 @@
     <Compile Include="AnimeTab.Designer.cs">
       <DependentUpon>AnimeTab.cs</DependentUpon>
     </Compile>
+    <Compile Include="ELogLevel.cs" />
     <Compile Include="Episode.cs" />
+    <Compile Include="Log.cs" />
     <Compile Include="PlexAnimeHelper.cs">
       <SubType>Form</SubType>
     </Compile>

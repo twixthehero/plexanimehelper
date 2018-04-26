@@ -74,7 +74,7 @@ namespace PlexAnimeHelper
 
 				if (name == null || seasons == -1)
 				{
-					Console.WriteLine($"Corrupt info file! Name={name} Seasons={seasons}");
+					Log.I($"Corrupt info file! Name={name} Seasons={seasons}");
 					return;
 				}
 
@@ -122,11 +122,10 @@ namespace PlexAnimeHelper
 		private void AddAnime(Anime anime)
 		{
 			animes.Add(animes.Count, anime);
+			settings.Add(anime.FolderPath);
 			Selected = anime;
 			LeftSeason = Selected.Seasons[0];
 			RightSeason = Selected.Seasons[1];
-
-			Console.WriteLine($"newAnime: {anime}");
 		}
 
 		public void AddSeason()
@@ -146,8 +145,26 @@ namespace PlexAnimeHelper
 
 		public void SetSelected(int index)
 		{
-			Selected = animes[index];
-			Console.WriteLine($"Selected {Selected}");
+			Selected = animes.Values[index];
+			Log.I($"Selected index={index} anime={Selected}");
+		}
+
+		public void CloseTab(int index)
+		{
+			Anime closing = animes[index];
+			Log.I($"Closing index={index} anime={closing}");
+
+			animes.Remove(index);
+
+			//shift indices down
+			for (int i = index + 1; i <= animes.Count; i++)
+			{
+				Anime toMove = animes[i];
+				animes.Remove(i);
+				animes.Add(i - 1, toMove);
+			}
+
+			settings.Remove(closing.FolderPath);
 		}
 
 		public void SetName(string name)
@@ -161,7 +178,7 @@ namespace PlexAnimeHelper
 			to.AddEpisode(e);
 		}
 
-		public void Save()
+		public void SaveActiveTab()
 		{
 			settings.Save();
 
@@ -172,25 +189,25 @@ namespace PlexAnimeHelper
 					continue;
 				}
 
-				Console.WriteLine($"Saving {pair.Value}");
+				Log.I($"Saving {pair.Value}");
 
 				string seasonPath = Path.Combine(Selected.FolderPath, pair.Value.Name);
-				Console.WriteLine($"Creating {seasonPath}...");
+				Log.I($"Creating {seasonPath}...");
 				if (!Directory.Exists(seasonPath))
 				{
-					Console.WriteLine($"Created {seasonPath}");
+					Log.I($"Created {seasonPath}");
 					Directory.CreateDirectory(seasonPath);
 				}
 				else
 				{
-					Console.WriteLine($"{seasonPath} exists");
+					Log.I($"{seasonPath} exists");
 				}
 
 				foreach (Episode e in pair.Value.Episodes.Values)
 				{
 					string dest = Path.Combine(seasonPath, $"{Selected.Name} s{pair.Value.Number:00}e{e.Number:00}.{e.Extension}");
 					e.Correct = e.Path == dest;
-					Console.WriteLine($"{e.Path} | {dest} | {e.Correct}");
+					Log.I($"{e.Path} | {dest} | {e.Correct}");
 
 					if (!e.Correct)
 					{
@@ -231,6 +248,11 @@ namespace PlexAnimeHelper
 		public void SaveAll()
 		{
 
+		}
+
+		public void SaveAnimeList()
+		{
+			settings.Save();
 		}
 	}
 }

@@ -22,7 +22,7 @@ namespace PlexAnimeHelper
 
 		private void AnimeTabs_Selecting(object sender, TabControlCancelEventArgs e)
 		{
-			Console.WriteLine("Unregistering events");
+			Log.I("Unregistering events...");
 
 			AnimeNameBox.TextChanged -= AnimeName_TextChanged;
 			SeasonsBox.ValueChanged -= Seasons_ValueChanged;
@@ -30,13 +30,13 @@ namespace PlexAnimeHelper
 			RightSeasonList.SelectedIndexChanged -= RightSeasonList_SelectedIndexChanged;
 			MoveLeftButton.Click -= MoveLeftButton_Click;
 			MoveRightButton.Click -= MoveRightButton_Click;
+
+			Log.I("Done");
 		}
 
 		private void AnimeTabs_Selected(object sender, TabControlEventArgs e)
 		{
-			Console.WriteLine("Registering events");
-
-			controller.SetSelected(animeTabs.SelectedIndex);
+			Log.I("Registering events...");
 
 			AnimeNameBox.TextChanged += AnimeName_TextChanged;
 			SeasonsBox.ValueChanged += Seasons_ValueChanged;
@@ -44,6 +44,10 @@ namespace PlexAnimeHelper
 			RightSeasonList.SelectedIndexChanged += RightSeasonList_SelectedIndexChanged;
 			MoveLeftButton.Click += MoveLeftButton_Click;
 			MoveRightButton.Click += MoveRightButton_Click;
+
+			Log.I("Done");
+
+			controller.SetSelected(animeTabs.SelectedIndex);
 		}
 
 		private TabPage CurrentPage { get { return animeTabs.SelectedTab; } }
@@ -95,6 +99,8 @@ namespace PlexAnimeHelper
 
 		public void AddAnimeTab(Anime anime)
 		{
+			Log.I($"Adding anime tab {anime}");
+
 			CreatePage();
 			CurrentPage.Text = anime.Name;
 
@@ -121,7 +127,7 @@ namespace PlexAnimeHelper
 
 		private void RebuildSeasonList()
 		{
-			Console.WriteLine("Rebuilding season lists");
+			Log.I("Rebuilding season lists");
 
 			LeftSeasonList.Items.Clear();
 			RightSeasonList.Items.Clear();
@@ -138,7 +144,7 @@ namespace PlexAnimeHelper
 
 		public void RebuildEpisodeLists()
 		{
-			Console.WriteLine("Rebuilding ep lists");
+			Log.I("Rebuilding ep lists");
 
 			RebuildLeftEpisodeList();
 			RebuildRightEpisodeList();
@@ -146,7 +152,7 @@ namespace PlexAnimeHelper
 
 		private void RebuildLeftEpisodeList()
 		{
-			Console.WriteLine("Rebuilding left ep list");
+			Log.I("Rebuilding left ep list");
 
 			LeftEpList.Items.Clear();
 			Season s = (Season)LeftSeasonList.SelectedItem;
@@ -158,7 +164,7 @@ namespace PlexAnimeHelper
 
 		private void RebuildRightEpisodeList()
 		{
-			Console.WriteLine("Rebuilding right ep list");
+			Log.I("Rebuilding right ep list");
 
 			RightEpList.Items.Clear();
 			Season s = (Season)RightSeasonList.SelectedItem;
@@ -194,9 +200,38 @@ namespace PlexAnimeHelper
 			}
 		}
 
-		private void SaveToolStripMenuItem_Click(object sender, EventArgs e)
+		private void SaveTab_Click(object sender, EventArgs e)
 		{
-			controller.Save();
+			controller.SaveActiveTab();
+		}
+
+		private void SaveAll_Click(object sender, EventArgs e)
+		{
+			controller.SaveAll();
+		}
+
+		private void CloseTab_Click(object sender, EventArgs e)
+		{
+			if (animeTabs.TabCount > 1)
+			{
+				int selected = animeTabs.SelectedIndex;
+				Log.I($"Closing tab index={selected}");
+				controller.CloseTab(selected);
+
+				//warning: don't use TabPages.RemoveAt(index), it has some sort of race condition that fucks up shit
+				animeTabs.Selecting -= AnimeTabs_Selecting;
+				animeTabs.Selected -= AnimeTabs_Selected;
+
+				animeTabs.TabPages.Remove(animeTabs.SelectedTab);
+
+				animeTabs.Selecting += AnimeTabs_Selecting;
+				animeTabs.Selected += AnimeTabs_Selected;
+			}
+		}
+
+		private void SaveAnimeList_Click(object sender, EventArgs e)
+		{
+			controller.SaveAnimeList();
 		}
 
 		private void ExitToolStripMenuItem_Click(object sender, EventArgs e)
