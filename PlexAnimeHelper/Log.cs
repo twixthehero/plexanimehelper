@@ -7,7 +7,8 @@ public class Log
 {
 	private static Log instance;
 
-	public ELogLevel LogLevel { get; set; }
+	public ELogLevel LogLevel { get; set; } = ELogLevel.DoubleDebug;
+	public ELogLevel ConsoleLogLevel { get; set; } = ELogLevel.Warning;
 	public bool Running { get; private set; }
 
 	private Thread thread;
@@ -32,8 +33,6 @@ public class Log
 
 	private Log()
 	{
-		LogLevel = ELogLevel.Debug;
-
 		if (!Directory.Exists("logs"))
 		{
 			Directory.CreateDirectory("logs");
@@ -110,7 +109,12 @@ public class Log
 	{
 		instance.messages.Enqueue(new LogMessage(ELogLevel.Debug, o));
 	}
-	
+
+	public static void DD(object o)
+	{
+		instance.messages.Enqueue(new LogMessage(ELogLevel.DoubleDebug, o));
+	}
+
 	private class LogMessage
 	{
 		public string Time { get; private set; }
@@ -123,7 +127,7 @@ public class Log
 			Level = level;
 			Message = msg;
 
-			if (level >= instance.LogLevel)
+			if (level >= instance.ConsoleLogLevel)
 			{
 				Console.WriteLine(this);
 			}

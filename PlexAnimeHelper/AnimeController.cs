@@ -74,7 +74,7 @@ namespace PlexAnimeHelper
 
 				if (name == null || seasons == -1)
 				{
-					Log.I($"Corrupt info file! Name={name} Seasons={seasons}");
+					Log.E($"Corrupt info file! Name={name} Seasons={seasons}");
 					return;
 				}
 
@@ -146,13 +146,13 @@ namespace PlexAnimeHelper
 		public void SetSelected(int index)
 		{
 			Selected = animes.Values[index];
-			Log.I($"Selected index={index} anime={Selected}");
+			Log.D($"Selected index={index} anime={Selected}");
 		}
 
 		public void CloseTab(int index)
 		{
 			Anime closing = animes[index];
-			Log.I($"Closing index={index} anime={closing}");
+			Log.D($"Closing index={index} anime={closing}");
 
 			animes.Remove(index);
 
@@ -182,6 +182,7 @@ namespace PlexAnimeHelper
 		{
 			settings.Save();
 
+			Log.I($"Saving {Selected}...");
 			foreach (KeyValuePair<int, Season> pair in Selected.Seasons)
 			{
 				if (pair.Key == 0)
@@ -189,25 +190,25 @@ namespace PlexAnimeHelper
 					continue;
 				}
 
-				Log.I($"Saving {pair.Value}");
+				Log.D($"Saving {pair.Value}");
 
 				string seasonPath = Path.Combine(Selected.FolderPath, pair.Value.Name);
-				Log.I($"Creating {seasonPath}...");
 				if (!Directory.Exists(seasonPath))
 				{
-					Log.I($"Created {seasonPath}");
+					Log.D($"Creating '{seasonPath}'...");
 					Directory.CreateDirectory(seasonPath);
+					Log.D($"Created '{seasonPath}'");
 				}
 				else
 				{
-					Log.I($"{seasonPath} exists");
+					Log.D($"'{seasonPath}' already exists");
 				}
 
 				foreach (Episode e in pair.Value.Episodes.Values)
 				{
 					string dest = Path.Combine(seasonPath, $"{Selected.Name} s{pair.Value.Number:00}e{e.Number:00}.{e.Extension}");
 					e.Correct = e.Path == dest;
-					Log.I($"{e.Path} | {dest} | {e.Correct}");
+					Log.D($"{e.Path} | {dest} | {e.Correct}");
 
 					if (!e.Correct)
 					{
@@ -243,6 +244,8 @@ namespace PlexAnimeHelper
 			w.WriteLine($"Name={Selected.Name}");
 			w.WriteLine($"Seasons={Selected.NumberSeasons}");
 			w.Close();
+
+			Log.I("Done saving");
 		}
 
 		public void SaveAll()

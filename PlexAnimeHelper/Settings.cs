@@ -53,22 +53,38 @@ namespace PlexAnimeHelper
 
 		public void Load()
 		{
+			Log.D($"Checking for {DATA_FILE}...");
 			if (File.Exists(DATA_FILE))
 			{
+				Log.D($"Found {DATA_FILE}");
 				FileStream fs = File.Open(DATA_FILE, FileMode.Open, FileAccess.Read, FileShare.Read);
 				StreamReader r = new StreamReader(fs);
 				string line;
 
 				while ((line = r.ReadLine()) != null)
 				{
-					if (line.Length == 0 || line.StartsWith("#"))
+					if (line.Length == 0)
 					{
 						continue;
 					}
 
+					if (line.StartsWith("#"))
+					{
+						Log.D($"Ignoring '{line}'");
+						continue;
+					}
+
 					string path = line.Split('=')[1];
-					Log.I($"Found path '{path}'");
-					ManagedAnime.Add(path);
+
+					if (Directory.Exists(path))
+					{
+						Log.I($"Found path '{path}'");
+						ManagedAnime.Add(path);
+					}
+					else
+					{
+						Log.W($"Ignoring non-existant path '{path}'");
+					}
 				}
 
 				r.Close();

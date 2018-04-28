@@ -1,4 +1,4 @@
 ﻿public enum ELogLevel
 {
-	Debug, Warning, Info, Error
+	DoubleDebug, Debug, Warning, Info, Error
 }
