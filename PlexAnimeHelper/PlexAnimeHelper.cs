@@ -18,11 +18,13 @@ namespace PlexAnimeHelper
 			menu = new ContextMenuStrip();
 
 			controller.Init();
+			
+			AnimeTabs_Selected(this, new TabControlEventArgs(CurrentPage, animeTabs.TabCount - 1, TabControlAction.Selected));
 		}
 
 		private void AnimeTabs_Selecting(object sender, TabControlCancelEventArgs e)
 		{
-			Log.I("Unregistering events...");
+			Log.D($"Unregistering events {CurrentPage?.Text}...");
 
 			AnimeNameBox.TextChanged -= AnimeName_TextChanged;
 			SeasonsBox.ValueChanged -= Seasons_ValueChanged;
@@ -31,12 +33,12 @@ namespace PlexAnimeHelper
 			MoveLeftButton.Click -= MoveLeftButton_Click;
 			MoveRightButton.Click -= MoveRightButton_Click;
 
-			Log.I("Done");
+			Log.D("Done");
 		}
 
 		private void AnimeTabs_Selected(object sender, TabControlEventArgs e)
 		{
-			Log.I("Registering events...");
+			Log.D($"Registering events {CurrentPage.Text}...");
 
 			AnimeNameBox.TextChanged += AnimeName_TextChanged;
 			SeasonsBox.ValueChanged += Seasons_ValueChanged;
@@ -45,7 +47,7 @@ namespace PlexAnimeHelper
 			MoveLeftButton.Click += MoveLeftButton_Click;
 			MoveRightButton.Click += MoveRightButton_Click;
 
-			Log.I("Done");
+			Log.D("Done");
 
 			controller.SetSelected(animeTabs.SelectedIndex);
 		}
@@ -83,23 +85,12 @@ namespace PlexAnimeHelper
 			TabPage page = new TabPage();
 			page.Controls.Add(new AnimeTab());
 			animeTabs.TabPages.Add(page);
-
-			if (animeTabs.TabCount == 1)
-			{
-				AnimeTabs_Selecting(this, new TabControlCancelEventArgs(page, animeTabs.TabCount - 1, false, TabControlAction.Selecting));
-			}
-
 			animeTabs.SelectTab(animeTabs.TabCount - 1);
-
-			if (animeTabs.TabCount == 1)
-			{
-				AnimeTabs_Selected(this, new TabControlEventArgs(page, animeTabs.TabCount - 1, TabControlAction.Selected));
-			}
 		}
 
 		public void AddAnimeTab(Anime anime)
 		{
-			Log.I($"Adding anime tab {anime}");
+			Log.D($"Adding anime tab {anime}");
 
 			CreatePage();
 			CurrentPage.Text = anime.Name;
@@ -127,7 +118,7 @@ namespace PlexAnimeHelper
 
 		private void RebuildSeasonList()
 		{
-			Log.I("Rebuilding season lists");
+			Log.D("Rebuilding season lists");
 
 			LeftSeasonList.Items.Clear();
 			RightSeasonList.Items.Clear();
@@ -144,7 +135,7 @@ namespace PlexAnimeHelper
 
 		public void RebuildEpisodeLists()
 		{
-			Log.I("Rebuilding ep lists");
+			Log.D("Rebuilding ep lists");
 
 			RebuildLeftEpisodeList();
 			RebuildRightEpisodeList();
@@ -152,7 +143,7 @@ namespace PlexAnimeHelper
 
 		private void RebuildLeftEpisodeList()
 		{
-			Log.I("Rebuilding left ep list");
+			Log.D("Rebuilding left ep list");
 
 			LeftEpList.Items.Clear();
 			Season s = (Season)LeftSeasonList.SelectedItem;
@@ -164,7 +155,7 @@ namespace PlexAnimeHelper
 
 		private void RebuildRightEpisodeList()
 		{
-			Log.I("Rebuilding right ep list");
+			Log.D("Rebuilding right ep list");
 
 			RightEpList.Items.Clear();
 			Season s = (Season)RightSeasonList.SelectedItem;
