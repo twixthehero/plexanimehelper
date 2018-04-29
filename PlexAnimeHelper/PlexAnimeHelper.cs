@@ -325,5 +325,20 @@ namespace PlexAnimeHelper
 		}
 
 		#endregion user control events
+
+		private void PlexAnimeHelper_Resize(object sender, EventArgs e)
+		{
+			if (WindowState == FormWindowState.Minimized)
+			{
+				Hide();
+				taskbarIcon.ShowBalloonTip(1000);
+			}
+		}
+
+		private void notifyIcon1_MouseDoubleClick(object sender, MouseEventArgs e)
+		{
+			Show();
+			WindowState = FormWindowState.Normal;
+		}
 	}
 }
