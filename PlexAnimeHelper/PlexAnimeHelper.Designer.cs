@@ -201,6 +201,7 @@
 			this.ClientSize = new System.Drawing.Size(972, 631);
 			this.Controls.Add(this.menuStrip1);
 			this.Controls.Add(this.animeTabs);
+			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.MainMenuStrip = this.menuStrip1;
 			this.Name = "PlexAnimeHelper";
 			this.Text = "PlexAnimeHelper";

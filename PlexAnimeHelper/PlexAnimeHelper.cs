@@ -19,7 +19,10 @@ namespace PlexAnimeHelper
 
 			controller.Init();
 			
-			AnimeTabs_Selected(this, new TabControlEventArgs(CurrentPage, animeTabs.TabCount - 1, TabControlAction.Selected));
+			if (animeTabs.TabCount > 0)
+			{
+				AnimeTabs_Selected(this, new TabControlEventArgs(CurrentPage, animeTabs.TabCount - 1, TabControlAction.Selected));
+			}
 		}
 
 		private void AnimeTabs_Selecting(object sender, TabControlCancelEventArgs e)
@@ -232,7 +235,7 @@ namespace PlexAnimeHelper
 
 		private void AboutToolStripMenuItem1_Click(object sender, EventArgs e)
 		{
-			//new AboutPlexAnimeHelper().Show();
+			new AboutPlexAnimeHelper().Show();
 		}
 
 		#endregion menu bar events
