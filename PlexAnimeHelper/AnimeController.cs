@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Timers;
 using System.Windows.Forms;
 
 namespace PlexAnimeHelper
@@ -17,9 +18,34 @@ namespace PlexAnimeHelper
 		private Season LeftSeason { get; set; }
 		private Season RightSeason { get; set; }
 
+		/// <summary>
+		/// Number of minutes to wait before rescanning this directory
+		/// </summary>
+		public int RescanTime { get; set; } = 5;
+		private System.Timers.Timer watchTimer;
+
 		public AnimeController(PlexAnimeHelper helper)
 		{
 			this.helper = helper;
+			watchTimer = new System.Timers.Timer(RescanTime * 60 * 1000);
+			watchTimer.Elapsed += Scan;
+			watchTimer.Start();
+		}
+
+		private void Scan(object sender, ElapsedEventArgs e)
+		{
+			bool foundNew = false;
+
+			foreach (Anime a in animes.Values)
+			{
+				foundNew = a.Scan() || foundNew;
+			}
+
+			if (foundNew)
+			{
+				helper.ShowTrayNoti("Found new episodes!");
+				helper.RebuildEpisodeLists();
+			}
 		}
 
 		public void Init()

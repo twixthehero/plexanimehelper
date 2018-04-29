@@ -1,16 +1,17 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Timers;
 
 namespace PlexAnimeHelper
 {
 	public class Anime
 	{
+		public static List<string> EXTENSIONS = new List<string>() { ".mkv", ".mp4" };
+
 		public string Name { get; set; }
 		public string FolderPath { get; private set; }
 		public SortedList<int, Season> Seasons { get; } = new SortedList<int, Season>();
-
-		public static List<string> EXTENSIONS = new List<string>() { ".mkv", ".mp4" };
 
 		public Anime(string path)
 		{
@@ -90,6 +91,84 @@ namespace PlexAnimeHelper
 		public int NumberSeasons
 		{
 			get { return Seasons.Count - 1; }
+		}
+
+		public bool Scan()
+		{
+			Log.DD($"Scanning '{FolderPath}'...");
+			bool foundNew = false;
+
+			Log.DD("Checking base directory...");
+			foreach (string file in Directory.GetFiles(FolderPath).Where(s => EXTENSIONS.Contains(Path.GetExtension(s))))
+			{
+				if (!Seasons[0].ContainsEpisode(file))
+				{
+					foundNew = true;
+
+					Log.D($"Adding unsorted ep: {file}");
+					Seasons[0].AddUnsortedEpisode(file);
+				}
+			}
+
+			Log.DD("Checking season directories...");
+			for (int i = 1; i <= NumberSeasons; i++)
+			{
+				if (!Seasons.ContainsKey(i))
+				{
+					continue;
+				}
+
+				string seasonPath = Path.Combine(FolderPath, $"Season {i:00}");
+
+				if (!Directory.Exists(seasonPath))
+				{
+					continue;
+				}
+
+				string[] files = Directory.GetFiles(seasonPath);
+
+				foreach (string file in files.Where(s => EXTENSIONS.Contains(Path.GetExtension(s))))
+				{
+					if (IsEpisodeNamedCorrectly(file))
+					{
+						if (!Seasons[i].ContainsEpisode(file))
+						{
+							string epName = Path.GetFileNameWithoutExtension(file);
+							int sIndex = epName.LastIndexOf('s');
+							int eIndex = epName.LastIndexOf('e');
+
+							string animeName = epName.Substring(0, sIndex - 1);
+							int seasonNum = int.Parse(epName.Substring(sIndex + 1, eIndex - (sIndex + 1)));
+							int epNum = int.Parse(epName.Substring(eIndex + 1));
+
+							Log.I($"Adding ep: {epName} | {animeName} | {seasonNum} | {epNum}");
+
+							//if ep data is correct
+							if (Name == animeName && seasonNum == i)
+							{
+								Seasons[i].AddEpisode(epNum, file, true);
+							}
+							else
+							{
+								Seasons[i].AddEpisode(epNum, file, false);
+							}
+						}
+					}
+					else
+					{
+						//add other videos found that aren't in the correct named format - consider them unsorted
+						if (!Seasons[0].ContainsEpisode(file))
+						{
+							foundNew = true;
+
+							Log.D($"Adding unsorted ep: {file}");
+							Seasons[0].AddUnsortedEpisode(file);
+						}
+					}
+				}
+			}
+
+			return foundNew;
 		}
 
 		/// <summary>

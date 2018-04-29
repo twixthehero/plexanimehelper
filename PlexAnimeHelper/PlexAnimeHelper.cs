@@ -168,6 +168,12 @@ namespace PlexAnimeHelper
 			}
 		}
 
+		public void ShowTrayNoti(string message)
+		{
+			taskbarIcon.BalloonTipText = message;
+			taskbarIcon.ShowBalloonTip(1000);
+		}
+
 		#region menu bar events
 
 		private void OpenFolderToolStripMenuItem_Click(object sender, EventArgs e)

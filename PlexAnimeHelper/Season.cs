@@ -28,6 +28,19 @@ namespace PlexAnimeHelper
 			get { return Episodes.Count; }
 		}
 
+		public bool ContainsEpisode(string path)
+		{
+			foreach (Episode e in Episodes.Values)
+			{
+				if (e.Path == path)
+				{
+					return true;
+				}
+			}
+
+			return false;
+		}
+
 		/// <summary>
 		/// Only used by Season 0
 		/// </summary>
