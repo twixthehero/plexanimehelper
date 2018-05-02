@@ -1,47 +1,56 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Timers;
 
 namespace PlexAnimeHelper
 {
 	public class Anime
 	{
-		public static List<string> EXTENSIONS = new List<string>() { ".mkv", ".mp4" };
-
-		public string Name { get; set; }
-		public string FolderPath { get; private set; }
 		public SortedList<int, Season> Seasons { get; } = new SortedList<int, Season>();
 
-		public Anime(string path)
+		public AnimeSettings Settings { get; private set; }
+
+		private Anime(string path)
 		{
-			FolderPath = path;
+			Settings = new AnimeSettings();
+
 			Name = path.Substring(path.LastIndexOf('\\') + 1);
-			Seasons.Add(0, new Season(0)); //unsorted eps are here | deleted season eps are moved here
-			Seasons.Add(1, new Season(1));
-			
-			foreach (string file in Directory.GetFiles(FolderPath).Where(s => EXTENSIONS.Contains(Path.GetExtension(s))))
-			{
-				Seasons[0].AddUnsortedEpisode(file);
-			}
+			FolderPath = path;
+
+			Init();
 		}
 
-		public Anime(string name, string path, int numSeasons)
+		public Anime(AnimeSettings settings)
 		{
+			Settings = settings;
+
+			Init();
+		}
+
+		private Anime(string name, string path, int numSeasons)
+		{
+			Settings = new AnimeSettings();
+
 			Name = name;
 			FolderPath = path;
-			Seasons.Add(0, new Season(0)); //unsorted eps are here | deleted season eps are moved here
 
+			Init();
+		}
+
+		private void Init()
+		{
 			Log.D("==========================================================================");
 
+			Seasons.Add(0, new Season(0)); //unsorted eps are here | deleted season eps are moved here
+
 			//add unsorted eps
-			foreach (string file in Directory.GetFiles(FolderPath).Where(s => EXTENSIONS.Contains(Path.GetExtension(s))))
+			foreach (string file in Directory.GetFiles(FolderPath).Where(s => Episode.EXTENSIONS.Contains(Path.GetExtension(s))))
 			{
 				Log.D($"Adding unsorted ep: {file}");
 				Seasons[0].AddUnsortedEpisode(file);
 			}
 
-			for (int i = 1; i <= numSeasons; i++)
+			for (int i = 1; i <= Settings.Seasons; i++)
 			{
 				Log.I($"Adding season {i}");
 				Seasons.Add(i, new Season(i));
@@ -54,7 +63,7 @@ namespace PlexAnimeHelper
 
 				string[] files = Directory.GetFiles(seasonPath);
 
-				foreach (string file in files.Where(s => EXTENSIONS.Contains(Path.GetExtension(s))))
+				foreach (string file in files.Where(s => Episode.EXTENSIONS.Contains(Path.GetExtension(s))))
 				{
 					if (IsEpisodeNamedCorrectly(file))
 					{
@@ -88,6 +97,47 @@ namespace PlexAnimeHelper
 			}
 		}
 
+		public int ID
+		{
+			get { return Settings.ID; }
+		}
+
+		public bool AutoMove
+		{
+			get
+			{
+				return Settings.AutoMove;
+			}
+			set
+			{
+				Settings.AutoMove = value;
+			}
+		}
+
+		public string Name
+		{
+			get
+			{
+				return Settings.Name;
+			}
+			set
+			{
+				Settings.Name = value;
+			}
+		}
+
+		public string FolderPath
+		{
+			get
+			{
+				return Settings.FolderPath;
+			}
+			set
+			{
+				Settings.FolderPath = value;
+			}
+		}
+
 		public int NumberSeasons
 		{
 			get { return Seasons.Count - 1; }
@@ -99,7 +149,7 @@ namespace PlexAnimeHelper
 			bool foundNew = false;
 
 			Log.DD("Checking base directory...");
-			foreach (string file in Directory.GetFiles(FolderPath).Where(s => EXTENSIONS.Contains(Path.GetExtension(s))))
+			foreach (string file in Directory.GetFiles(FolderPath).Where(s => Episode.EXTENSIONS.Contains(Path.GetExtension(s))))
 			{
 				if (!Seasons[0].ContainsEpisode(file))
 				{
@@ -127,7 +177,7 @@ namespace PlexAnimeHelper
 
 				string[] files = Directory.GetFiles(seasonPath);
 
-				foreach (string file in files.Where(s => EXTENSIONS.Contains(Path.GetExtension(s))))
+				foreach (string file in files.Where(s => Episode.EXTENSIONS.Contains(Path.GetExtension(s))))
 				{
 					if (IsEpisodeNamedCorrectly(file))
 					{
@@ -257,6 +307,64 @@ namespace PlexAnimeHelper
 		public override string ToString()
 		{
 			return $"Anime[Name={Name},NumSeasons={NumberSeasons}]";
+		}
+
+		public class Builder
+		{
+			private string name;
+			private string folderPath;
+			private int seasons;
+
+			public string GetName()
+			{
+				return name;
+			}
+
+			public Builder SetName(string name)
+			{
+				this.name = name;
+				return this;
+			}
+
+			public string GetFolderPath()
+			{
+				return folderPath;
+			}
+
+			public Builder SetFolderPath(string folderPath)
+			{
+				this.folderPath = folderPath;
+				return this;
+			}
+
+			public int GetSeasons()
+			{
+				return seasons;
+			}
+
+			public Builder SetSeasons(int seasons)
+			{
+				this.seasons = seasons;
+				return this;
+			}
+
+			public Anime Build()
+			{
+				Anime anime;
+
+				if (name != null)
+				{
+					anime = new Anime(name, folderPath, seasons);
+				}
+				else
+				{
+					anime = new Anime(folderPath);
+				}
+				
+				ApplicationSettings.Instance.Add(anime);
+
+				return anime;
+			}
 		}
 	}
 }

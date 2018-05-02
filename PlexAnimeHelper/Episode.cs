@@ -1,7 +1,11 @@
-﻿namespace PlexAnimeHelper
+﻿using System.Collections.Generic;
+
+namespace PlexAnimeHelper
 {
 	public class Episode
 	{
+		public static List<string> EXTENSIONS = new List<string>() { ".mkv", ".mp4" };
+
 		public int Number { get; set; }
 		public string Filename { get; private set; }
 		public string Extension { get; private set; }

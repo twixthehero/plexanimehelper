@@ -9,25 +9,19 @@ namespace PlexAnimeHelper
 {
 	public class AnimeController
 	{
-		private Settings settings = new Settings();
-
 		private PlexAnimeHelper helper;
 		private SortedList<int, Anime> animes = new SortedList<int, Anime>();
 
 		public Anime Selected { get; set; }
 		private Season LeftSeason { get; set; }
 		private Season RightSeason { get; set; }
-
-		/// <summary>
-		/// Number of minutes to wait before rescanning this directory
-		/// </summary>
-		public int RescanTime { get; set; } = 5;
+		
 		private System.Timers.Timer watchTimer;
 
 		public AnimeController(PlexAnimeHelper helper)
 		{
 			this.helper = helper;
-			watchTimer = new System.Timers.Timer(RescanTime * 60 * 1000);
+			watchTimer = new System.Timers.Timer(ApplicationSettings.Instance.RescanTime * 60 * 1000);
 			watchTimer.Elapsed += Scan;
 			watchTimer.Start();
 		}
@@ -55,61 +49,17 @@ namespace PlexAnimeHelper
 
 		private void LoadData()
 		{
-			settings.Load();
-
-			foreach (string path in settings.ManagedAnime)
+			foreach (KeyValuePair<int, AnimeSettings> pair in ApplicationSettings.Instance.AnimeSettings)
 			{
-				OpenAnimeFolder(path);
+				AddAnime(new Anime(pair.Value));
+
+				helper.AddAnimeTab(Selected);
 			}
 		}
-
+		
 		public void OpenAnimeFolder(string path)
 		{
-			string info = Path.Combine(path, "info.txt");
-			if (File.Exists(info))
-			{
-				StreamReader r = new StreamReader(File.OpenRead(info));
-				string name = null;
-				int seasons = -1;
-
-				string line;
-				while ((line = r.ReadLine()) != null)
-				{
-					if (!line.Contains("="))
-					{
-						continue;
-					}
-
-					int index = line.IndexOf('=');
-					string key = line.Substring(0, index);
-					string value = line.Substring(index + 1);
-
-					switch (key)
-					{
-						case "Name":
-							name = value;
-							break;
-						case "Seasons":
-							seasons = int.Parse(value);
-							break;
-						default:
-							break;
-					}
-				}
-				r.Close();
-
-				if (name == null || seasons == -1)
-				{
-					Log.E($"Corrupt info file! Name={name} Seasons={seasons}");
-					return;
-				}
-
-				AddAnime(name, seasons, path);
-			}
-			else
-			{
-				AddAnime(path);
-			}
+			AddAnime(new Anime.Builder().SetFolderPath(path).Build());
 
 			helper.AddAnimeTab(Selected);
 		}
@@ -127,29 +77,20 @@ namespace PlexAnimeHelper
 		/// </summary>
 		public void OpenEpisodeFolder(string path)
 		{
-			foreach (string file in Directory.GetFiles(path).Where(s => Anime.EXTENSIONS.Contains(Path.GetExtension(s))))
+			foreach (string file in Directory.GetFiles(path).Where(s => Episode.EXTENSIONS.Contains(Path.GetExtension(s))))
 			{
 				Selected.Seasons[0].AddUnsortedEpisode(file);
 			}
 
 			helper.RebuildEpisodeLists();
 		}
-
-		public void AddAnime(string path)
-		{
-			AddAnime(new Anime(path));
-		}
-
-		public void AddAnime(string name, int seasons, string path)
-		{
-			AddAnime(new Anime(name, path, seasons));
-		}
-
+		
 		private void AddAnime(Anime anime)
 		{
 			animes.Add(animes.Count, anime);
-			settings.Add(anime.FolderPath);
+
 			Selected = anime;
+
 			LeftSeason = Selected.Seasons[0];
 			RightSeason = Selected.Seasons[1];
 		}
@@ -190,7 +131,7 @@ namespace PlexAnimeHelper
 				animes.Add(i - 1, toMove);
 			}
 
-			settings.Remove(closing.FolderPath);
+			ApplicationSettings.Instance.Remove(closing.ID);
 		}
 
 		public void SetName(string name)
@@ -206,7 +147,7 @@ namespace PlexAnimeHelper
 
 		public void SaveActiveTab()
 		{
-			settings.Save();
+			ApplicationSettings.Save();
 
 			Log.I($"Saving {Selected}...");
 			foreach (KeyValuePair<int, Season> pair in Selected.Seasons)
@@ -243,7 +184,19 @@ namespace PlexAnimeHelper
 						{
 							try
 							{
-								File.Move(e.Path, dest);
+								if (File.Exists(dest))
+								{
+									File.Delete(dest);
+								}
+								if (Directory.Exists(dest))
+								{
+									Directory.Delete(dest);
+								}
+
+								File.Copy(e.Path, dest);
+								File.Delete(e.Path);
+
+								//File.Move(e.Path, dest);
 								
 								e.Correct = true;
 								e.Path = dest;
@@ -281,7 +234,7 @@ namespace PlexAnimeHelper
 
 		public void SaveAnimeList()
 		{
-			settings.Save();
+			ApplicationSettings.Save();
 		}
 	}
 }

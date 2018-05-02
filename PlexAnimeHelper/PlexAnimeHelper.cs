@@ -5,6 +5,8 @@ namespace PlexAnimeHelper
 {
 	public partial class PlexAnimeHelper : Form
 	{
+		public const string NAME = "Plex Anime Helper";
+
 		private FolderBrowserDialog browser;
 		private AnimeController controller;
 		private ContextMenuStrip menu;
@@ -85,10 +87,17 @@ namespace PlexAnimeHelper
 
 		private void CreatePage()
 		{
+			bool noneOpened = animeTabs.TabCount == 0;
+
 			TabPage page = new TabPage();
 			page.Controls.Add(new AnimeTab());
 			animeTabs.TabPages.Add(page);
 			animeTabs.SelectTab(animeTabs.TabCount - 1);
+
+			if (noneOpened)
+			{
+				AnimeTabs_Selected(this, new TabControlEventArgs(CurrentPage, animeTabs.TabCount - 1, TabControlAction.Selected));
+			}
 		}
 
 		public void AddAnimeTab(Anime anime)
@@ -241,7 +250,7 @@ namespace PlexAnimeHelper
 
 		private void AboutToolStripMenuItem1_Click(object sender, EventArgs e)
 		{
-			new AboutPlexAnimeHelper().Show();
+			new AboutPlexAnimeHelper().ShowDialog();
 		}
 
 		#endregion menu bar events
