@@ -38,6 +38,10 @@
 			this.label2 = new System.Windows.Forms.Label();
 			this.seasons = new System.Windows.Forms.NumericUpDown();
 			this.name = new System.Windows.Forms.TextBox();
+			this.autoScanCheckbox = new System.Windows.Forms.CheckBox();
+			this.label3 = new System.Windows.Forms.Label();
+			this.label4 = new System.Windows.Forms.Label();
+			this.autoMoveCheckbox = new System.Windows.Forms.CheckBox();
 			((System.ComponentModel.ISupportInitialize)(this.seasons)).BeginInit();
 			this.SuspendLayout();
 			// 
@@ -153,10 +157,50 @@
 			this.name.TabIndex = 14;
 			this.name.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
 			// 
+			// autoScanCheckbox
+			// 
+			this.autoScanCheckbox.AutoSize = true;
+			this.autoScanCheckbox.Location = new System.Drawing.Point(610, 36);
+			this.autoScanCheckbox.Name = "autoScanCheckbox";
+			this.autoScanCheckbox.Size = new System.Drawing.Size(15, 14);
+			this.autoScanCheckbox.TabIndex = 16;
+			this.autoScanCheckbox.UseVisualStyleBackColor = true;
+			// 
+			// label3
+			// 
+			this.label3.AutoSize = true;
+			this.label3.Location = new System.Drawing.Point(530, 36);
+			this.label3.Name = "label3";
+			this.label3.Size = new System.Drawing.Size(60, 13);
+			this.label3.TabIndex = 17;
+			this.label3.Text = "Auto Scan:";
+			// 
+			// label4
+			// 
+			this.label4.AutoSize = true;
+			this.label4.Location = new System.Drawing.Point(530, 91);
+			this.label4.Name = "label4";
+			this.label4.Size = new System.Drawing.Size(62, 13);
+			this.label4.TabIndex = 18;
+			this.label4.Text = "Auto Move:";
+			// 
+			// autoMoveCheckbox
+			// 
+			this.autoMoveCheckbox.AutoSize = true;
+			this.autoMoveCheckbox.Location = new System.Drawing.Point(610, 91);
+			this.autoMoveCheckbox.Name = "autoMoveCheckbox";
+			this.autoMoveCheckbox.Size = new System.Drawing.Size(15, 14);
+			this.autoMoveCheckbox.TabIndex = 19;
+			this.autoMoveCheckbox.UseVisualStyleBackColor = true;
+			// 
 			// AnimeTab
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+			this.Controls.Add(this.autoMoveCheckbox);
+			this.Controls.Add(this.label4);
+			this.Controls.Add(this.label3);
+			this.Controls.Add(this.autoScanCheckbox);
 			this.Controls.Add(this.label1);
 			this.Controls.Add(this.label2);
 			this.Controls.Add(this.seasons);
@@ -186,5 +230,9 @@
 		private System.Windows.Forms.Label label2;
 		private System.Windows.Forms.NumericUpDown seasons;
 		private System.Windows.Forms.TextBox name;
+		private System.Windows.Forms.CheckBox autoScanCheckbox;
+		private System.Windows.Forms.Label label3;
+		private System.Windows.Forms.Label label4;
+		private System.Windows.Forms.CheckBox autoMoveCheckbox;
 	}
 }

@@ -7,7 +7,6 @@ namespace PlexAnimeHelper
 	{
 		public const string NAME = "Plex Anime Helper";
 
-		private FolderBrowserDialog browser;
 		private AnimeController controller;
 		private ContextMenuStrip menu;
 
@@ -15,12 +14,11 @@ namespace PlexAnimeHelper
 		{
 			InitializeComponent();
 
-			browser = new FolderBrowserDialog();
 			controller = new AnimeController(this);
 			menu = new ContextMenuStrip();
 
 			controller.Init();
-			
+
 			if (animeTabs.TabCount > 0)
 			{
 				AnimeTabs_Selected(this, new TabControlEventArgs(CurrentPage, animeTabs.TabCount - 1, TabControlAction.Selected));
@@ -32,6 +30,8 @@ namespace PlexAnimeHelper
 			Log.D($"Unregistering events {CurrentPage?.Text}...");
 
 			AnimeNameBox.TextChanged -= AnimeName_TextChanged;
+			AutoMoveBox.CheckedChanged -= AutoMoveBox_CheckedChanged;
+			AutoScanBox.CheckedChanged -= AutoScanBox_CheckedChanged;
 			SeasonsBox.ValueChanged -= Seasons_ValueChanged;
 			LeftSeasonList.SelectedIndexChanged -= LeftSeasonList_SelectedIndexChanged;
 			RightSeasonList.SelectedIndexChanged -= RightSeasonList_SelectedIndexChanged;
@@ -46,6 +46,8 @@ namespace PlexAnimeHelper
 			Log.D($"Registering events {CurrentPage.Text}...");
 
 			AnimeNameBox.TextChanged += AnimeName_TextChanged;
+			AutoMoveBox.CheckedChanged += AutoMoveBox_CheckedChanged;
+			AutoScanBox.CheckedChanged += AutoScanBox_CheckedChanged;
 			SeasonsBox.ValueChanged += Seasons_ValueChanged;
 			LeftSeasonList.SelectedIndexChanged += LeftSeasonList_SelectedIndexChanged;
 			RightSeasonList.SelectedIndexChanged += RightSeasonList_SelectedIndexChanged;
@@ -69,6 +71,18 @@ namespace PlexAnimeHelper
 		{
 			get { return SeasonsBox.Text; }
 			set { SeasonsBox.Text = value; }
+		}
+		private CheckBox AutoMoveBox { get { return ((CheckBox)CurrentPage.Controls.Find("autoMoveCheckbox", true)[0]); } }
+		public bool AutoMove
+		{
+			get { return AutoMoveBox.Checked; }
+			set { AutoMoveBox.Checked = value; }
+		}
+		private CheckBox AutoScanBox { get { return ((CheckBox)CurrentPage.Controls.Find("autoScanCheckbox", true)[0]); } }
+		public bool AutoScan
+		{
+			get { return AutoScanBox.Checked; }
+			set { AutoScanBox.Checked = value; }
 		}
 		private ComboBox LeftSeasonList { get { return ((ComboBox)CurrentPage.Controls.Find("leftSeasonList", true)[0]); } }
 		private Season LeftSeason
@@ -112,6 +126,9 @@ namespace PlexAnimeHelper
 
 			AnimeName = anime.Name;
 			Seasons = $"{anime.NumberSeasons}";
+
+			AutoMove = anime.AutoMove;
+			AutoScan = anime.AutoScan;
 
 			LeftSeasonList.Items.Clear();
 			RightSeasonList.Items.Clear();
@@ -183,45 +200,9 @@ namespace PlexAnimeHelper
 			taskbarIcon.ShowBalloonTip(1000);
 		}
 
-		#region menu bar events
-
-		private void OpenFolderToolStripMenuItem_Click(object sender, EventArgs e)
+		private void CloseActiveTab()
 		{
-			if (browser.ShowDialog() == DialogResult.OK)
-			{
-				controller.OpenAnimeFolder(browser.SelectedPath);
-			}
-		}
-
-		private void EpisodesToolStripMenuItem_Click(object sender, EventArgs e)
-		{
-			if (browser.ShowDialog() == DialogResult.OK)
-			{
-				controller.OpenEpisode(browser.SelectedPath);
-			}
-		}
-
-		private void FolderToolStripMenuItem_Click(object sender, EventArgs e)
-		{
-			if (browser.ShowDialog() == DialogResult.OK)
-			{
-				controller.OpenEpisodeFolder(browser.SelectedPath);
-			}
-		}
-
-		private void SaveTab_Click(object sender, EventArgs e)
-		{
-			controller.SaveActiveTab();
-		}
-
-		private void SaveAll_Click(object sender, EventArgs e)
-		{
-			controller.SaveAll();
-		}
-
-		private void CloseTab_Click(object sender, EventArgs e)
-		{
-			if (animeTabs.TabCount > 1)
+			if (animeTabs.TabCount > 0)
 			{
 				int selected = animeTabs.SelectedIndex;
 				Log.I($"Closing tab index={selected}");
@@ -238,23 +219,80 @@ namespace PlexAnimeHelper
 			}
 		}
 
+		#region menu bar events
+
+		private void OpenFolder_Click(object sender, EventArgs e)
+		{
+			ShowAnimeFolderBrowser();
+		}
+
+		private void AddEpisode_Click(object sender, EventArgs e)
+		{
+			using (FolderBrowserDialog browser = new FolderBrowserDialog())
+			{
+				if (browser.ShowDialog() == DialogResult.OK)
+				{
+					controller.OpenEpisode(browser.SelectedPath);
+				}
+			}
+		}
+
+		private void AddFolder_Click(object sender, EventArgs e)
+		{
+			using (FolderBrowserDialog browser = new FolderBrowserDialog())
+			{
+				if (browser.ShowDialog() == DialogResult.OK)
+				{
+					controller.OpenEpisodeFolder(browser.SelectedPath);
+				}
+			}
+		}
+
+		private void CloseTab_Click(object sender, EventArgs e)
+		{
+			CloseActiveTab();
+		}
+
+		private void SaveTab_Click(object sender, EventArgs e)
+		{
+			controller.SaveActiveTab();
+		}
+
+		private void SaveAll_Click(object sender, EventArgs e)
+		{
+			controller.SaveAll();
+		}
+
 		private void SaveAnimeList_Click(object sender, EventArgs e)
 		{
 			controller.SaveAnimeList();
 		}
 
-		private void ExitToolStripMenuItem_Click(object sender, EventArgs e)
+		private void Preferences_Click(object sender, EventArgs e)
+		{
+			using (SettingsControl control = new SettingsControl())
+			{
+				control.StartPosition = FormStartPosition.CenterParent;
+				control.ShowDialog();
+			}
+		}
+
+		private void Exit_Click(object sender, EventArgs e)
 		{
 			Environment.Exit(0);
 		}
 
-		private void AboutToolStripMenuItem1_Click(object sender, EventArgs e)
+		private void About_Click(object sender, EventArgs e)
 		{
-			new AboutPlexAnimeHelper().ShowDialog();
+			using (AboutPlexAnimeHelper window = new AboutPlexAnimeHelper())
+			{
+				window.StartPosition = FormStartPosition.CenterParent;
+				window.ShowDialog();
+			}
 		}
 
 		#endregion menu bar events
-		
+
 		#region user control events
 
 		private void Episodes_Click(object sender, MouseEventArgs e)
@@ -273,6 +311,16 @@ namespace PlexAnimeHelper
 		private void AnimeName_TextChanged(object sender, EventArgs e)
 		{
 			controller.SetName(AnimeName);
+		}
+
+		private void AutoMoveBox_CheckedChanged(object sender, EventArgs e)
+		{
+			controller.SetAutoMove(AutoMove);
+		}
+
+		private void AutoScanBox_CheckedChanged(object sender, EventArgs e)
+		{
+			controller.SetAutoScan(AutoScan);
 		}
 
 		private void Seasons_ValueChanged(object sender, EventArgs e)
@@ -353,10 +401,50 @@ namespace PlexAnimeHelper
 			}
 		}
 
-		private void notifyIcon1_MouseDoubleClick(object sender, MouseEventArgs e)
+		private void TrayIcon_MouseDoubleClick(object sender, MouseEventArgs e)
 		{
 			Show();
 			WindowState = FormWindowState.Normal;
+		}
+
+		protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+		{
+			switch (keyData)
+			{
+				case (Keys.Control | Keys.S):
+					Log.DD("Ctrl + S");
+					Log.D("Saving...");
+					controller.SaveActiveTab();
+					return true;
+				case (Keys.Control | Keys.Shift | Keys.S):
+					Log.DD("Ctrl + Shift + S");
+					Log.D("Saving all...");
+					controller.SaveAll();
+					return true;
+				case (Keys.Control | Keys.O):
+					Log.DD("Ctrl + O");
+					Log.D("Opening...");
+					ShowAnimeFolderBrowser();
+					return true;
+				case (Keys.Control | Keys.W):
+					Log.DD("Ctrl + W");
+					Log.D("Closing tab...");
+					CloseActiveTab();
+					return true;
+			}
+
+			return base.ProcessCmdKey(ref msg, keyData);
+		}
+
+		private void ShowAnimeFolderBrowser()
+		{
+			using (FolderBrowserDialog browser = new FolderBrowserDialog())
+			{
+				if (browser.ShowDialog() == DialogResult.OK)
+				{
+					controller.OpenAnimeFolder(browser.SelectedPath);
+				}
+			}
 		}
 	}
 }

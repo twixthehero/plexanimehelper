@@ -114,6 +114,18 @@ namespace PlexAnimeHelper
 			}
 		}
 
+		public bool AutoScan
+		{
+			get
+			{
+				return Settings.AutoScan;
+			}
+			set
+			{
+				Settings.AutoScan = value;
+			}
+		}
+
 		public string Name
 		{
 			get

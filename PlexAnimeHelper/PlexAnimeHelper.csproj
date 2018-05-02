@@ -80,6 +80,12 @@
     <Compile Include="Season.cs" />
     <Compile Include="ApplicationSettings.cs" />
     <Compile Include="SetOnce.cs" />
+    <Compile Include="SettingsControl.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SettingsControl.Designer.cs">
+      <DependentUpon>SettingsControl.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="AboutPlexAnimeHelper.resx">
       <DependentUpon>AboutPlexAnimeHelper.cs</DependentUpon>
     </EmbeddedResource>
@@ -98,6 +104,9 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="SettingsControl.resx">
+      <DependentUpon>SettingsControl.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>

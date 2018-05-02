@@ -32,7 +32,10 @@ namespace PlexAnimeHelper
 
 			foreach (Anime a in animes.Values)
 			{
-				foundNew = a.Scan() || foundNew;
+				if (a.AutoScan)
+				{
+					foundNew = a.Scan() || foundNew;
+				}
 			}
 
 			if (foundNew)
@@ -137,6 +140,16 @@ namespace PlexAnimeHelper
 		public void SetName(string name)
 		{
 			Selected.Name = name;
+		}
+
+		public void SetAutoMove(bool auto)
+		{
+			Selected.AutoMove = auto;
+		}
+
+		public void SetAutoScan(bool auto)
+		{
+			Selected.AutoScan = auto;
 		}
 
 		public void MoveEpisode(Season from, Season to, Episode e)
