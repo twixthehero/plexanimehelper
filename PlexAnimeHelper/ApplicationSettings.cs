@@ -8,7 +8,7 @@ namespace PlexAnimeHelper
 {
 	class ApplicationSettings
 	{
-		private const string SETTINGS_FILE = "settings.json";
+		public const string SETTINGS_FILE = "settings.json";
 		private static string APP_DATA;
 		private static string DATA_DIR;
 		private static string DATA_FILE;
@@ -252,10 +252,41 @@ namespace PlexAnimeHelper
 				return true;
 			}
 		}
-
-		public static void ResetInstance(ApplicationSettings settings)
+		
+		public static void Apply(ApplicationSettings settings)
 		{
 			Instance = settings;
+
+			PlexAnimeHelper.Instance.Reinit();
+		}
+
+		public static void SaveTo(string path)
+		{
+			JsonSerializer serializer = new JsonSerializer
+			{
+				NullValueHandling = NullValueHandling.Include,
+				Formatting = Formatting.Indented
+			};
+
+			using (StreamWriter sw = new StreamWriter(System.IO.File.Open(path, FileMode.Create, FileAccess.Write, FileShare.None)))
+			using (JsonWriter writer = new JsonTextWriter(sw))
+			{
+				serializer.Serialize(writer, Instance);
+			}
+		}
+
+		public static void LoadFrom(string path)
+		{
+			JsonSerializer serializer = new JsonSerializer
+			{
+				NullValueHandling = NullValueHandling.Include
+			};
+
+			using (StreamReader r = new StreamReader(System.IO.File.Open(path, FileMode.Open, FileAccess.Read, FileShare.Read)))
+			using (JsonReader reader = new JsonTextReader(r))
+			{
+				Apply(serializer.Deserialize<ApplicationSettings>(reader));
+			}
 		}
 	}
 }

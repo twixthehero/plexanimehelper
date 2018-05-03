@@ -7,11 +7,15 @@ namespace PlexAnimeHelper
 	{
 		public const string NAME = "Plex Anime Helper";
 
+		public static PlexAnimeHelper Instance { get; set; }
+
 		private AnimeController controller;
 		private ContextMenuStrip menu;
 
 		public PlexAnimeHelper()
 		{
+			Instance = this;
+
 			InitializeComponent();
 
 			controller = new AnimeController(this);
@@ -35,6 +39,18 @@ namespace PlexAnimeHelper
 			}
 
 			FormClosing += OnStopping;
+		}
+
+		public void Reinit()
+		{
+			CloseAllTabs(false);
+
+			controller.Init();
+
+			if (animeTabs.TabCount > 0)
+			{
+				AnimeTabs_Selected(this, new TabControlEventArgs(CurrentPage, animeTabs.TabCount - 1, TabControlAction.Selected));
+			}
 		}
 
 		private void AnimeTabs_Selecting(object sender, TabControlCancelEventArgs e)
@@ -212,13 +228,13 @@ namespace PlexAnimeHelper
 			taskbarIcon.ShowBalloonTip(1000);
 		}
 
-		private void CloseActiveTab()
+		private void CloseActiveTab(bool removeFromWatch = true)
 		{
 			if (animeTabs.TabCount > 0)
 			{
 				int selected = animeTabs.SelectedIndex;
 				Log.I($"Closing tab index={selected}");
-				controller.CloseTab(selected);
+				controller.CloseTab(selected, removeFromWatch);
 
 				//warning: don't use TabPages.RemoveAt(index), it has some sort of race condition that fucks up shit
 				animeTabs.Selecting -= AnimeTabs_Selecting;
@@ -228,6 +244,19 @@ namespace PlexAnimeHelper
 
 				animeTabs.Selecting += AnimeTabs_Selecting;
 				animeTabs.Selected += AnimeTabs_Selected;
+			}
+		}
+
+		private void CloseAllTabsExceptActive(bool removeFromWatch = true)
+		{
+
+		}
+
+		private void CloseAllTabs(bool removeFromWatch = true)
+		{
+			while (animeTabs.TabPages.Count > 0)
+			{
+				CloseActiveTab(false);
 			}
 		}
 
@@ -265,6 +294,11 @@ namespace PlexAnimeHelper
 			CloseActiveTab();
 		}
 
+		private void CloseAllTabs_Click(object sender, EventArgs e)
+		{
+			CloseAllTabs();
+		}
+
 		private void SaveTab_Click(object sender, EventArgs e)
 		{
 			controller.SaveActiveTab();
@@ -278,6 +312,36 @@ namespace PlexAnimeHelper
 		private void SaveAnimeList_Click(object sender, EventArgs e)
 		{
 			controller.SaveAnimeList();
+		}
+
+		private void ImportSettingsButton_Click(object sender, EventArgs e)
+		{
+			using (FolderBrowserDialog browser = new FolderBrowserDialog())
+			{
+				if (browser.ShowDialog() == DialogResult.OK)
+				{
+					ApplicationSettings.LoadFrom(browser.SelectedPath);
+				}
+			}
+		}
+
+		private void ExportSettingsButton_Click(object sender, EventArgs e)
+		{
+			using (SaveFileDialog dialog = new SaveFileDialog())
+			{
+				dialog.AddExtension = true;
+				dialog.DefaultExt = ".json";
+				dialog.DereferenceLinks = true;
+				dialog.FileName = ApplicationSettings.SETTINGS_FILE;
+				dialog.Filter = "JSON Files (*.json)|*.json";
+				dialog.OverwritePrompt = true;
+				dialog.ValidateNames = true;
+
+				if (dialog.ShowDialog() == DialogResult.OK)
+				{
+					ApplicationSettings.SaveTo(dialog.FileName);
+				}
+			}
 		}
 
 		private void Preferences_Click(object sender, EventArgs e)
@@ -442,6 +506,11 @@ namespace PlexAnimeHelper
 					Log.DD("Ctrl + W");
 					Log.D("Closing tab...");
 					CloseActiveTab();
+					return true;
+				case (Keys.Control | Keys.Shift | Keys.W):
+					Log.DD("Ctrl + Shift + W");
+					Log.D("Closing all tabs...");
+					CloseAllTabs();
 					return true;
 			}
 

@@ -5,7 +5,6 @@ namespace PlexAnimeHelper
 {
 	public partial class SettingsControl : Form
 	{
-		private ApplicationSettings settings;
 		private ApplicationSettings temp;
 
 		private bool isSaved = false;
@@ -14,18 +13,17 @@ namespace PlexAnimeHelper
 		{
 			InitializeComponent();
 			
-			settings = ApplicationSettings.Instance;
-			//store copy to reset back to
-			temp = new ApplicationSettings(settings);
+			//use copy to modify
+			temp = new ApplicationSettings(ApplicationSettings.Instance);
 			
 			startupBehaviour.Items.Add(EStartMode.None);
 			startupBehaviour.Items.Add(EStartMode.Minimized);
 			startupBehaviour.Items.Add(EStartMode.Visible);
 			startupBehaviour.Items.Add(EStartMode.Maximized);
-			startupBehaviour.SelectedIndex = (int)settings.StartMode;
+			startupBehaviour.SelectedIndex = (int)temp.StartMode;
 			startupBehaviour.SelectedIndexChanged += StartBehaviourChanged;
 
-			rescanTime.Value = settings.RescanTime;
+			rescanTime.Value = temp.RescanTime;
 			rescanTime.ValueChanged += RescanTime_ValueChanged;
 
 			FormClosing += OnStopping;
@@ -35,40 +33,38 @@ namespace PlexAnimeHelper
 
 		private void RescanTime_ValueChanged(object sender, EventArgs e)
 		{
-			settings.RescanTime = (int)rescanTime.Value;
-			Log.D($"RescanTime: {settings.RescanTime}");
+			temp.RescanTime = (int)rescanTime.Value;
+			Log.D($"RescanTime: {temp.RescanTime}");
 			CheckEnableSave();
 		}
 
 		private void CheckEnableSave()
 		{
-			saveButton.Enabled = settings != temp;
+			saveButton.Enabled = temp != ApplicationSettings.Instance;
 		}
 
 		private void StartBehaviourChanged(object sender, EventArgs e)
 		{
-			settings.StartMode = (EStartMode)startupBehaviour.SelectedIndex;
-			Log.D($"StartMode: {settings.StartMode}");
+			temp.StartMode = (EStartMode)startupBehaviour.SelectedIndex;
+			Log.D($"StartMode: {temp.StartMode}");
 			CheckEnableSave();
 		}
 
 		private void Save_Click(object sender, EventArgs e)
 		{
-			ApplicationSettings.Save();
+			ApplicationSettings.Apply(temp);
 			isSaved = true;
 			Close();
 		}
 
 		private void Cancel_Click(object sender, EventArgs e)
 		{
-			ApplicationSettings.ResetInstance(temp);
 			Close();
 		}
 
 		private void OnStopping(object sender, EventArgs e)
 		{
-			return;
-			if (!isSaved && settings != temp)
+			if (!isSaved && temp != ApplicationSettings.Instance)
 			{
 				((FormClosingEventArgs)e).Cancel = MessageBox.Show("Cancel without saving?", "Exit", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) != DialogResult.Yes;
 			}

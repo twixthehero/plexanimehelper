@@ -119,7 +119,7 @@ namespace PlexAnimeHelper
 			Log.D($"Selected index={index} anime={Selected}");
 		}
 
-		public void CloseTab(int index)
+		public void CloseTab(int index, bool removeFromWatch = true)
 		{
 			Anime closing = animes[index];
 			Log.D($"Closing index={index} anime={closing}");
@@ -134,7 +134,10 @@ namespace PlexAnimeHelper
 				animes.Add(i - 1, toMove);
 			}
 
-			ApplicationSettings.Instance.Remove(closing.ID);
+			if (removeFromWatch)
+			{
+				ApplicationSettings.Instance.Remove(closing.ID);
+			}
 		}
 
 		public void SetName(string name)

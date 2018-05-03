@@ -31,170 +31,190 @@
 			this.components = new System.ComponentModel.Container();
 			System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PlexAnimeHelper));
 			this.menuStrip1 = new System.Windows.Forms.MenuStrip();
-			this.fileToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.openFolderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.fileMenu = new System.Windows.Forms.ToolStripMenuItem();
+			this.openFolderButton = new System.Windows.Forms.ToolStripMenuItem();
 			this.addToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.episodesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.folderToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+			this.addEpisodesButton = new System.Windows.Forms.ToolStripMenuItem();
+			this.addFolderButton = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
-			this.toolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+			this.closeTabButton = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
-			this.saveToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolStripMenuItem2 = new System.Windows.Forms.ToolStripMenuItem();
-			this.toolStripMenuItem3 = new System.Windows.Forms.ToolStripMenuItem();
+			this.saveTabButton = new System.Windows.Forms.ToolStripMenuItem();
+			this.saveAllTabsButton = new System.Windows.Forms.ToolStripMenuItem();
+			this.saveAnimeListButton = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator1 = new System.Windows.Forms.ToolStripSeparator();
-			this.toolStripMenuItem4 = new System.Windows.Forms.ToolStripMenuItem();
+			this.importSettingsButton = new System.Windows.Forms.ToolStripMenuItem();
+			this.exportSettingsButton = new System.Windows.Forms.ToolStripMenuItem();
+			this.settingsButton = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator3 = new System.Windows.Forms.ToolStripSeparator();
-			this.exitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-			this.aboutToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+			this.exitButton = new System.Windows.Forms.ToolStripMenuItem();
+			this.aboutMenu = new System.Windows.Forms.ToolStripMenuItem();
+			this.aboutButton = new System.Windows.Forms.ToolStripMenuItem();
 			this.animeTabs = new System.Windows.Forms.TabControl();
 			this.taskbarIcon = new System.Windows.Forms.NotifyIcon(this.components);
+			this.closeAllTabsButton = new System.Windows.Forms.ToolStripMenuItem();
 			this.menuStrip1.SuspendLayout();
 			this.SuspendLayout();
 			// 
 			// menuStrip1
 			// 
 			this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.fileToolStripMenuItem,
-            this.aboutToolStripMenuItem});
+            this.fileMenu,
+            this.aboutMenu});
 			this.menuStrip1.Location = new System.Drawing.Point(0, 0);
 			this.menuStrip1.Name = "menuStrip1";
 			this.menuStrip1.Size = new System.Drawing.Size(972, 24);
 			this.menuStrip1.TabIndex = 0;
 			this.menuStrip1.Text = "menuStrip1";
 			// 
-			// fileToolStripMenuItem
+			// fileMenu
 			// 
-			this.fileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.openFolderToolStripMenuItem,
+			this.fileMenu.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.openFolderButton,
             this.addToolStripMenuItem,
             this.toolStripSeparator4,
-            this.toolStripMenuItem1,
+            this.closeTabButton,
+            this.closeAllTabsButton,
             this.toolStripSeparator2,
-            this.saveToolStripMenuItem,
-            this.toolStripMenuItem2,
-            this.toolStripMenuItem3,
+            this.saveTabButton,
+            this.saveAllTabsButton,
+            this.saveAnimeListButton,
             this.toolStripSeparator1,
-            this.toolStripMenuItem4,
+            this.importSettingsButton,
+            this.exportSettingsButton,
+            this.settingsButton,
             this.toolStripSeparator3,
-            this.exitToolStripMenuItem});
-			this.fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-			this.fileToolStripMenuItem.Size = new System.Drawing.Size(37, 20);
-			this.fileToolStripMenuItem.Text = "File";
+            this.exitButton});
+			this.fileMenu.Name = "fileMenu";
+			this.fileMenu.Size = new System.Drawing.Size(37, 20);
+			this.fileMenu.Text = "File";
 			// 
-			// openFolderToolStripMenuItem
+			// openFolderButton
 			// 
-			this.openFolderToolStripMenuItem.Name = "openFolderToolStripMenuItem";
-			this.openFolderToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
-			this.openFolderToolStripMenuItem.Size = new System.Drawing.Size(214, 22);
-			this.openFolderToolStripMenuItem.Text = "Open Folder...";
-			this.openFolderToolStripMenuItem.Click += new System.EventHandler(this.OpenFolder_Click);
+			this.openFolderButton.Name = "openFolderButton";
+			this.openFolderButton.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
+			this.openFolderButton.Size = new System.Drawing.Size(224, 22);
+			this.openFolderButton.Text = "Open Folder...";
+			this.openFolderButton.Click += new System.EventHandler(this.OpenFolder_Click);
 			// 
 			// addToolStripMenuItem
 			// 
 			this.addToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.episodesToolStripMenuItem,
-            this.folderToolStripMenuItem});
+            this.addEpisodesButton,
+            this.addFolderButton});
 			this.addToolStripMenuItem.Name = "addToolStripMenuItem";
-			this.addToolStripMenuItem.Size = new System.Drawing.Size(214, 22);
+			this.addToolStripMenuItem.Size = new System.Drawing.Size(224, 22);
 			this.addToolStripMenuItem.Text = "Add";
 			// 
-			// episodesToolStripMenuItem
+			// addEpisodesButton
 			// 
-			this.episodesToolStripMenuItem.Name = "episodesToolStripMenuItem";
-			this.episodesToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
-			this.episodesToolStripMenuItem.Text = "Episodes...";
-			this.episodesToolStripMenuItem.Click += new System.EventHandler(this.AddEpisode_Click);
+			this.addEpisodesButton.Name = "addEpisodesButton";
+			this.addEpisodesButton.Size = new System.Drawing.Size(129, 22);
+			this.addEpisodesButton.Text = "Episodes...";
+			this.addEpisodesButton.Click += new System.EventHandler(this.AddEpisode_Click);
 			// 
-			// folderToolStripMenuItem
+			// addFolderButton
 			// 
-			this.folderToolStripMenuItem.Name = "folderToolStripMenuItem";
-			this.folderToolStripMenuItem.Size = new System.Drawing.Size(129, 22);
-			this.folderToolStripMenuItem.Text = "Folder...";
-			this.folderToolStripMenuItem.Click += new System.EventHandler(this.AddFolder_Click);
+			this.addFolderButton.Name = "addFolderButton";
+			this.addFolderButton.Size = new System.Drawing.Size(129, 22);
+			this.addFolderButton.Text = "Folder...";
+			this.addFolderButton.Click += new System.EventHandler(this.AddFolder_Click);
 			// 
 			// toolStripSeparator4
 			// 
 			this.toolStripSeparator4.Name = "toolStripSeparator4";
-			this.toolStripSeparator4.Size = new System.Drawing.Size(211, 6);
+			this.toolStripSeparator4.Size = new System.Drawing.Size(221, 6);
 			// 
-			// toolStripMenuItem1
+			// closeTabButton
 			// 
-			this.toolStripMenuItem1.Name = "toolStripMenuItem1";
-			this.toolStripMenuItem1.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.W)));
-			this.toolStripMenuItem1.Size = new System.Drawing.Size(214, 22);
-			this.toolStripMenuItem1.Text = "Close Tab";
-			this.toolStripMenuItem1.Click += new System.EventHandler(this.CloseTab_Click);
+			this.closeTabButton.Name = "closeTabButton";
+			this.closeTabButton.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.W)));
+			this.closeTabButton.Size = new System.Drawing.Size(224, 22);
+			this.closeTabButton.Text = "Close Tab";
+			this.closeTabButton.Click += new System.EventHandler(this.CloseTab_Click);
 			// 
 			// toolStripSeparator2
 			// 
 			this.toolStripSeparator2.Name = "toolStripSeparator2";
-			this.toolStripSeparator2.Size = new System.Drawing.Size(211, 6);
+			this.toolStripSeparator2.Size = new System.Drawing.Size(221, 6);
 			// 
-			// saveToolStripMenuItem
+			// saveTabButton
 			// 
-			this.saveToolStripMenuItem.Name = "saveToolStripMenuItem";
-			this.saveToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-			this.saveToolStripMenuItem.Size = new System.Drawing.Size(214, 22);
-			this.saveToolStripMenuItem.Text = "Save Tab";
-			this.saveToolStripMenuItem.Click += new System.EventHandler(this.SaveTab_Click);
+			this.saveTabButton.Name = "saveTabButton";
+			this.saveTabButton.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
+			this.saveTabButton.Size = new System.Drawing.Size(224, 22);
+			this.saveTabButton.Text = "Save Tab";
+			this.saveTabButton.Click += new System.EventHandler(this.SaveTab_Click);
 			// 
-			// toolStripMenuItem2
+			// saveAllTabsButton
 			// 
-			this.toolStripMenuItem2.Name = "toolStripMenuItem2";
-			this.toolStripMenuItem2.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
+			this.saveAllTabsButton.Name = "saveAllTabsButton";
+			this.saveAllTabsButton.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
             | System.Windows.Forms.Keys.S)));
-			this.toolStripMenuItem2.Size = new System.Drawing.Size(214, 22);
-			this.toolStripMenuItem2.Text = "Save All Tabs";
-			this.toolStripMenuItem2.Click += new System.EventHandler(this.SaveAll_Click);
+			this.saveAllTabsButton.Size = new System.Drawing.Size(224, 22);
+			this.saveAllTabsButton.Text = "Save All Tabs";
+			this.saveAllTabsButton.Click += new System.EventHandler(this.SaveAll_Click);
 			// 
-			// toolStripMenuItem3
+			// saveAnimeListButton
 			// 
-			this.toolStripMenuItem3.Name = "toolStripMenuItem3";
-			this.toolStripMenuItem3.Size = new System.Drawing.Size(214, 22);
-			this.toolStripMenuItem3.Text = "Save Anime List";
-			this.toolStripMenuItem3.Click += new System.EventHandler(this.SaveAnimeList_Click);
+			this.saveAnimeListButton.Name = "saveAnimeListButton";
+			this.saveAnimeListButton.Size = new System.Drawing.Size(224, 22);
+			this.saveAnimeListButton.Text = "Save Anime List";
+			this.saveAnimeListButton.Click += new System.EventHandler(this.SaveAnimeList_Click);
 			// 
 			// toolStripSeparator1
 			// 
 			this.toolStripSeparator1.Name = "toolStripSeparator1";
-			this.toolStripSeparator1.Size = new System.Drawing.Size(211, 6);
+			this.toolStripSeparator1.Size = new System.Drawing.Size(221, 6);
 			// 
-			// toolStripMenuItem4
+			// importSettingsButton
 			// 
-			this.toolStripMenuItem4.Name = "toolStripMenuItem4";
-			this.toolStripMenuItem4.Size = new System.Drawing.Size(214, 22);
-			this.toolStripMenuItem4.Text = "Preferences...";
-			this.toolStripMenuItem4.Click += new System.EventHandler(this.Preferences_Click);
+			this.importSettingsButton.Name = "importSettingsButton";
+			this.importSettingsButton.Size = new System.Drawing.Size(224, 22);
+			this.importSettingsButton.Text = "Import Settings";
+			this.importSettingsButton.Click += new System.EventHandler(this.ImportSettingsButton_Click);
+			// 
+			// exportSettingsButton
+			// 
+			this.exportSettingsButton.Name = "exportSettingsButton";
+			this.exportSettingsButton.Size = new System.Drawing.Size(224, 22);
+			this.exportSettingsButton.Text = "Export Settings";
+			this.exportSettingsButton.Click += new System.EventHandler(this.ExportSettingsButton_Click);
+			// 
+			// settingsButton
+			// 
+			this.settingsButton.Name = "settingsButton";
+			this.settingsButton.Size = new System.Drawing.Size(224, 22);
+			this.settingsButton.Text = "Settings...";
+			this.settingsButton.Click += new System.EventHandler(this.Preferences_Click);
 			// 
 			// toolStripSeparator3
 			// 
 			this.toolStripSeparator3.Name = "toolStripSeparator3";
-			this.toolStripSeparator3.Size = new System.Drawing.Size(211, 6);
+			this.toolStripSeparator3.Size = new System.Drawing.Size(221, 6);
 			// 
-			// exitToolStripMenuItem
+			// exitButton
 			// 
-			this.exitToolStripMenuItem.Name = "exitToolStripMenuItem";
-			this.exitToolStripMenuItem.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.F4)));
-			this.exitToolStripMenuItem.Size = new System.Drawing.Size(214, 22);
-			this.exitToolStripMenuItem.Text = "Exit";
-			this.exitToolStripMenuItem.Click += new System.EventHandler(this.Exit_Click);
+			this.exitButton.Name = "exitButton";
+			this.exitButton.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.F4)));
+			this.exitButton.Size = new System.Drawing.Size(224, 22);
+			this.exitButton.Text = "Exit";
+			this.exitButton.Click += new System.EventHandler(this.Exit_Click);
 			// 
-			// aboutToolStripMenuItem
+			// aboutMenu
 			// 
-			this.aboutToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.aboutToolStripMenuItem1});
-			this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
-			this.aboutToolStripMenuItem.Size = new System.Drawing.Size(52, 20);
-			this.aboutToolStripMenuItem.Text = "About";
+			this.aboutMenu.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.aboutButton});
+			this.aboutMenu.Name = "aboutMenu";
+			this.aboutMenu.Size = new System.Drawing.Size(52, 20);
+			this.aboutMenu.Text = "About";
 			// 
-			// aboutToolStripMenuItem1
+			// aboutButton
 			// 
-			this.aboutToolStripMenuItem1.Name = "aboutToolStripMenuItem1";
-			this.aboutToolStripMenuItem1.Size = new System.Drawing.Size(107, 22);
-			this.aboutToolStripMenuItem1.Text = "About";
-			this.aboutToolStripMenuItem1.Click += new System.EventHandler(this.About_Click);
+			this.aboutButton.Name = "aboutButton";
+			this.aboutButton.Size = new System.Drawing.Size(107, 22);
+			this.aboutButton.Text = "About";
+			this.aboutButton.Click += new System.EventHandler(this.About_Click);
 			// 
 			// animeTabs
 			// 
@@ -215,6 +235,15 @@
 			this.taskbarIcon.Text = "Plex Anime Helper";
 			this.taskbarIcon.Visible = true;
 			this.taskbarIcon.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.TrayIcon_MouseDoubleClick);
+			// 
+			// closeAllTabsButton
+			// 
+			this.closeAllTabsButton.Name = "closeAllTabsButton";
+			this.closeAllTabsButton.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
+            | System.Windows.Forms.Keys.W)));
+			this.closeAllTabsButton.Size = new System.Drawing.Size(224, 22);
+			this.closeAllTabsButton.Text = "Close All Tabs";
+			this.closeAllTabsButton.Click += new System.EventHandler(this.CloseAllTabs_Click);
 			// 
 			// PlexAnimeHelper
 			// 
@@ -240,25 +269,28 @@
 		#endregion
 
 		private System.Windows.Forms.MenuStrip menuStrip1;
-		private System.Windows.Forms.ToolStripMenuItem fileToolStripMenuItem;
-		private System.Windows.Forms.ToolStripMenuItem openFolderToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem fileMenu;
+		private System.Windows.Forms.ToolStripMenuItem openFolderButton;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator1;
-		private System.Windows.Forms.ToolStripMenuItem exitToolStripMenuItem;
-		private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem;
-		private System.Windows.Forms.ToolStripMenuItem aboutToolStripMenuItem1;
-		private System.Windows.Forms.ToolStripMenuItem saveToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem exitButton;
+		private System.Windows.Forms.ToolStripMenuItem aboutMenu;
+		private System.Windows.Forms.ToolStripMenuItem aboutButton;
+		private System.Windows.Forms.ToolStripMenuItem saveTabButton;
 		private System.Windows.Forms.ToolStripMenuItem addToolStripMenuItem;
-		private System.Windows.Forms.ToolStripMenuItem episodesToolStripMenuItem;
-		private System.Windows.Forms.ToolStripMenuItem folderToolStripMenuItem;
+		private System.Windows.Forms.ToolStripMenuItem addEpisodesButton;
+		private System.Windows.Forms.ToolStripMenuItem addFolderButton;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator2;
 		private System.Windows.Forms.TabControl animeTabs;
-		private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem1;
-		private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem2;
+		private System.Windows.Forms.ToolStripMenuItem closeTabButton;
+		private System.Windows.Forms.ToolStripMenuItem saveAllTabsButton;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator3;
-		private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem3;
+		private System.Windows.Forms.ToolStripMenuItem saveAnimeListButton;
 		private System.Windows.Forms.NotifyIcon taskbarIcon;
-		private System.Windows.Forms.ToolStripMenuItem toolStripMenuItem4;
+		private System.Windows.Forms.ToolStripMenuItem settingsButton;
 		private System.Windows.Forms.ToolStripSeparator toolStripSeparator4;
+		private System.Windows.Forms.ToolStripMenuItem importSettingsButton;
+		private System.Windows.Forms.ToolStripMenuItem exportSettingsButton;
+		private System.Windows.Forms.ToolStripMenuItem closeAllTabsButton;
 	}
 }
 
