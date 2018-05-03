@@ -23,6 +23,18 @@ namespace PlexAnimeHelper
 			{
 				AnimeTabs_Selected(this, new TabControlEventArgs(CurrentPage, animeTabs.TabCount - 1, TabControlAction.Selected));
 			}
+
+			switch (ApplicationSettings.Instance.StartMode)
+			{
+				case EStartMode.Minimized:
+					WindowState = FormWindowState.Minimized;
+					break;
+				case EStartMode.Maximized:
+					WindowState = FormWindowState.Maximized;
+					break;
+			}
+
+			FormClosing += OnStopping;
 		}
 
 		private void AnimeTabs_Selecting(object sender, TabControlCancelEventArgs e)
@@ -445,6 +457,11 @@ namespace PlexAnimeHelper
 					controller.OpenAnimeFolder(browser.SelectedPath);
 				}
 			}
+		}
+
+		private void OnStopping(object sender, FormClosingEventArgs e)
+		{
+			taskbarIcon.Dispose();
 		}
 	}
 }

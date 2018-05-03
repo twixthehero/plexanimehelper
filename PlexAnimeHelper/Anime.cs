@@ -37,6 +37,20 @@ namespace PlexAnimeHelper
 			Init();
 		}
 
+		/// <summary>
+		/// Copy constructor
+		/// </summary>
+		/// <param name="anime"></param>
+		public Anime(Anime anime)
+		{
+			Settings = new AnimeSettings(anime.Settings);
+
+			foreach (Season season in Seasons.Values)
+			{
+				Seasons.Add(season.Number, new Season(season));
+			}
+		}
+
 		private void Init()
 		{
 			Log.D("==========================================================================");
@@ -319,6 +333,59 @@ namespace PlexAnimeHelper
 		public override string ToString()
 		{
 			return $"Anime[Name={Name},NumSeasons={NumberSeasons}]";
+		}
+
+		public override bool Equals(object obj)
+		{
+			if (obj == null || !(obj is Anime))
+			{
+				return false;
+			}
+
+			Anime other = (Anime)obj;
+
+			if (Settings != other.Settings)
+			{
+				return false;
+			}
+
+			foreach (KeyValuePair<int, Season> pair in Seasons)
+			{
+				if (!other.Seasons.ContainsKey(pair.Key) || other.Seasons[pair.Key] != pair.Value)
+				{
+					return false;
+				}
+			}
+
+			foreach (KeyValuePair<int, Season> Pair in other.Seasons)
+			{
+				if (!Seasons.ContainsKey(Pair.Key) || Seasons[Pair.Key] != Pair.Value)
+				{
+					return false;
+				}
+			}
+
+			return true;
+		}
+
+		public override int GetHashCode()
+		{
+			int hash = 23;
+
+			hash = (hash * 7) + Seasons.GetHashCode();
+			hash = (hash * 7) + Settings.GetHashCode();
+
+			return hash;
+		}
+
+		public static bool operator==(Anime a1, Anime a2)
+		{
+			return a1.Equals(a2);
+		}
+
+		public static bool operator !=(Anime a1, Anime a2)
+		{
+			return !a1.Equals(a2);
 		}
 
 		public class Builder

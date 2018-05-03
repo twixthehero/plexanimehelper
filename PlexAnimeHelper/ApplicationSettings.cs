@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using IWshRuntimeLibrary;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -15,6 +16,21 @@ namespace PlexAnimeHelper
 		public static ApplicationSettings Instance { get; private set; }
 
 		public int Version { get; private set; } = 1;
+
+		private EStartMode startMode = EStartMode.Visible;
+		public EStartMode StartMode
+		{
+			get
+			{
+				return startMode;
+			}
+			set
+			{
+				startMode = value;
+
+				CheckStartMode();
+			}
+		}
 
 		/// <summary>
 		/// Time in minutes to rescan all managed shows
@@ -40,7 +56,7 @@ namespace PlexAnimeHelper
 			}
 
 			Log.D($"Checking for '{DATA_FILE}'");
-			if (File.Exists(DATA_FILE) && Load())
+			if (System.IO.File.Exists(DATA_FILE) && Load())
 			{
 				Log.D("Loaded application settings!");
 			}
@@ -50,11 +66,68 @@ namespace PlexAnimeHelper
 				Instance = new ApplicationSettings();
 				Save();
 			}
+
+			Instance.CheckStartMode();
 		}
 
+		[JsonConstructor]
 		private ApplicationSettings()
 		{
+			
+		}
 
+		/// <summary>
+		/// Copy constructor
+		/// </summary>
+		/// <param name="settings"></param>
+		public ApplicationSettings(ApplicationSettings settings)
+		{
+			Version = settings.Version;
+			startMode = settings.StartMode;
+			RescanTime = settings.RescanTime;
+
+			foreach (AnimeSettings set in settings.AnimeSettings.Values)
+			{
+				AnimeSettings.Add(set.ID, new AnimeSettings(set));
+			}
+		}
+
+		private void CheckStartMode()
+		{
+			if (StartMode == EStartMode.None)
+			{
+				UninstallBootShortcut();
+			}
+			else
+			{
+				InstallBootShortcut();
+			}
+		}
+
+		private void InstallBootShortcut()
+		{
+			string startup = Environment.GetFolderPath(Environment.SpecialFolder.Startup);
+			string shortcutPath = Path.Combine(startup, "PlexAnimeHelper.lnk");
+			
+			if (!System.IO.File.Exists(shortcutPath))
+			{
+				Log.D($"Creating shortcut '{shortcutPath}'...");
+				WshShortcut shortcut = new WshShell().CreateShortcut(shortcutPath);
+				shortcut.TargetPath = System.Reflection.Assembly.GetExecutingAssembly().Location;
+				shortcut.Save();
+			}
+		}
+
+		private void UninstallBootShortcut()
+		{
+			string startup = Environment.GetFolderPath(Environment.SpecialFolder.Startup);
+			string shortcutPath = Path.Combine(startup, "PlexAnimeHelper.lnk");
+
+			if (System.IO.File.Exists(shortcutPath))
+			{
+				Log.D($"Removing shortcut '{shortcutPath}'...");
+				System.IO.File.Delete(shortcutPath);
+			}
 		}
 
 		private int GetNextID()
@@ -95,6 +168,61 @@ namespace PlexAnimeHelper
 			}
 		}
 
+		public override bool Equals(object obj)
+		{
+			if (obj == null || !(obj is ApplicationSettings))
+			{
+				return false;
+			}
+
+			ApplicationSettings other = (ApplicationSettings)obj;
+
+			if (Version != other.Version || StartMode != other.StartMode ||
+				RescanTime != other.RescanTime)
+			{
+				return false;
+			}
+
+			foreach (KeyValuePair<int, AnimeSettings> pair in AnimeSettings)
+			{
+				if (!other.AnimeSettings.ContainsKey(pair.Key) || other.AnimeSettings[pair.Key] != pair.Value)
+				{
+					return false;
+				}
+			}
+
+			foreach (KeyValuePair<int, AnimeSettings> Pair in other.AnimeSettings)
+			{
+				if (!AnimeSettings.ContainsKey(Pair.Key) || AnimeSettings[Pair.Key] != Pair.Value)
+				{
+					return false;
+				}
+			}
+
+			return true;
+		}
+
+		public override int GetHashCode()
+		{
+			int hash = 23;
+
+			hash = (hash * 7) + Version.GetHashCode();
+			hash = (hash * 7) + StartMode.GetHashCode();
+			hash = (hash * 7) + RescanTime.GetHashCode();
+
+			return hash;
+		}
+
+		public static bool operator ==(ApplicationSettings a1, ApplicationSettings a2)
+		{
+			return a1.Equals(a2);
+		}
+
+		public static bool operator !=(ApplicationSettings a1, ApplicationSettings a2)
+		{
+			return !a1.Equals(a2);
+		}
+
 		public static void Save()
 		{
 			JsonSerializer serializer = new JsonSerializer
@@ -103,7 +231,7 @@ namespace PlexAnimeHelper
 				Formatting = Formatting.Indented
 			};
 
-			using (StreamWriter sw = new StreamWriter(File.Open(DATA_FILE, FileMode.Create, FileAccess.Write, FileShare.None)))
+			using (StreamWriter sw = new StreamWriter(System.IO.File.Open(DATA_FILE, FileMode.Create, FileAccess.Write, FileShare.None)))
 			using (JsonWriter writer = new JsonTextWriter(sw))
 			{
 				serializer.Serialize(writer, Instance);
@@ -117,12 +245,17 @@ namespace PlexAnimeHelper
 				NullValueHandling = NullValueHandling.Include
 			};
 
-			using (StreamReader r = new StreamReader(File.Open(DATA_FILE, FileMode.Open, FileAccess.Read, FileShare.Read)))
+			using (StreamReader r = new StreamReader(System.IO.File.Open(DATA_FILE, FileMode.Open, FileAccess.Read, FileShare.Read)))
 			using (JsonReader reader = new JsonTextReader(r))
 			{
 				Instance = serializer.Deserialize<ApplicationSettings>(reader);
 				return true;
 			}
+		}
+
+		public static void ResetInstance(ApplicationSettings settings)
+		{
+			Instance = settings;
 		}
 	}
 }

@@ -1,20 +1,71 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace PlexAnimeHelper
 {
 	public partial class SettingsControl : Form
 	{
+		private ApplicationSettings settings;
+		private ApplicationSettings temp;
+
+		private bool isSaved = false;
+
 		public SettingsControl()
 		{
 			InitializeComponent();
+			
+			settings = ApplicationSettings.Instance;
+			//store copy to reset back to
+			temp = new ApplicationSettings(settings);
+			
+			startupBehaviour.Items.Add(EStartMode.None);
+			startupBehaviour.Items.Add(EStartMode.Minimized);
+			startupBehaviour.Items.Add(EStartMode.Visible);
+			startupBehaviour.Items.Add(EStartMode.Maximized);
+			startupBehaviour.SelectedIndex = (int)settings.StartMode;
+			startupBehaviour.SelectedIndexChanged += StartBehaviourChanged;
+
+			FormClosing += OnStopping;
+
+			saveButton.Enabled = false;
+		}
+
+		private void CheckEnableSave()
+		{
+			saveButton.Enabled = settings != temp;
+		}
+
+		private void StartBehaviourChanged(object sender, EventArgs e)
+		{
+			settings.StartMode = (EStartMode)(startupBehaviour.SelectedIndex);
+			Log.D($"StartMode: {settings.StartMode}");
+
+			CheckEnableSave();
+		}
+
+		private void Save_Click(object sender, EventArgs e)
+		{
+			ApplicationSettings.Save();
+			isSaved = true;
+			Close();
+		}
+
+		private void Cancel_Click(object sender, EventArgs e)
+		{
+			ApplicationSettings.ResetInstance(temp);
+			Close();
+		}
+
+		private void OnStopping(object sender, EventArgs e)
+		{
+			if (!isSaved && settings != temp)
+			{
+				((FormClosingEventArgs)e).Cancel = MessageBox.Show("Cancel without saving?", "Exit", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) != DialogResult.Yes;
+			}
+			else
+			{
+				Close();
+			}
 		}
 	}
 }

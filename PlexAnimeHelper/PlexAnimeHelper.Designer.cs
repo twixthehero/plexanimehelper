@@ -192,7 +192,7 @@
 			// aboutToolStripMenuItem1
 			// 
 			this.aboutToolStripMenuItem1.Name = "aboutToolStripMenuItem1";
-			this.aboutToolStripMenuItem1.Size = new System.Drawing.Size(180, 22);
+			this.aboutToolStripMenuItem1.Size = new System.Drawing.Size(107, 22);
 			this.aboutToolStripMenuItem1.Text = "About";
 			this.aboutToolStripMenuItem1.Click += new System.EventHandler(this.About_Click);
 			// 
@@ -227,6 +227,7 @@
 			this.KeyPreview = true;
 			this.MainMenuStrip = this.menuStrip1;
 			this.Name = "PlexAnimeHelper";
+			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
 			this.Text = "PlexAnimeHelper";
 			this.Resize += new System.EventHandler(this.PlexAnimeHelper_Resize);
 			this.menuStrip1.ResumeLayout(false);

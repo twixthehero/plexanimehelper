@@ -23,6 +23,21 @@ namespace PlexAnimeHelper
 			}
 		}
 
+		/// <summary>
+		/// Copy constructor
+		/// </summary>
+		/// <param name="season"></param>
+		public Season(Season season)
+		{
+			Number = season.Number;
+			Name = season.Name;
+			
+			foreach (Episode ep in season.Episodes.Values)
+			{
+				Episodes.Add(ep.Number, new Episode(ep));
+			}
+		}
+
 		public int NumberEpisodes
 		{
 			get { return Episodes.Count; }
@@ -105,6 +120,59 @@ namespace PlexAnimeHelper
 		public override string ToString()
 		{
 			return Name;
+		}
+
+		public override int GetHashCode()
+		{
+			int hash = 23;
+
+			hash = (hash * 7) + Number.GetHashCode();
+			hash = (hash * 7) + Name.GetHashCode();
+
+			return hash;
+		}
+
+		public override bool Equals(object obj)
+		{
+			if (obj == null || !(obj is Season))
+			{
+				return false;
+			}
+
+			Season other = (Season)obj;
+
+			if (Number != other.Number || Name != other.Name)
+			{
+				return false;
+			}
+			
+			foreach (KeyValuePair<int, Episode> ep in Episodes)
+			{
+				if (!other.Episodes.ContainsKey(ep.Key) || other.Episodes[ep.Key] != ep.Value)
+				{
+					return false;
+				}
+			}
+
+			foreach (KeyValuePair<int, Episode> ep in other.Episodes)
+			{
+				if (!Episodes.ContainsKey(ep.Key) || Episodes[ep.Key] != ep.Value)
+				{
+					return false;
+				}
+			}
+
+			return true;
+		}
+
+		public static bool operator ==(Season s1, Season s2)
+		{
+			return s1.Equals(s2);
+		}
+
+		public static bool operator !=(Season s1, Season s2)
+		{
+			return !s1.Equals(s2);
 		}
 	}
 }
