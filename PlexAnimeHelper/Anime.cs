@@ -310,6 +310,7 @@ namespace PlexAnimeHelper
 		{
 			int num = Seasons.Count;
 			Seasons.Add(num, new Season(num));
+			Settings.Seasons = NumberSeasons;
 		}
 
 		public void DeleteSeason(int season = -1)
