@@ -25,9 +25,19 @@ namespace PlexAnimeHelper
 			startupBehaviour.SelectedIndex = (int)settings.StartMode;
 			startupBehaviour.SelectedIndexChanged += StartBehaviourChanged;
 
+			rescanTime.Value = settings.RescanTime;
+			rescanTime.ValueChanged += RescanTime_ValueChanged;
+
 			FormClosing += OnStopping;
 
 			saveButton.Enabled = false;
+		}
+
+		private void RescanTime_ValueChanged(object sender, EventArgs e)
+		{
+			settings.RescanTime = (int)rescanTime.Value;
+			Log.D($"RescanTime: {settings.RescanTime}");
+			CheckEnableSave();
 		}
 
 		private void CheckEnableSave()
@@ -37,9 +47,8 @@ namespace PlexAnimeHelper
 
 		private void StartBehaviourChanged(object sender, EventArgs e)
 		{
-			settings.StartMode = (EStartMode)(startupBehaviour.SelectedIndex);
+			settings.StartMode = (EStartMode)startupBehaviour.SelectedIndex;
 			Log.D($"StartMode: {settings.StartMode}");
-
 			CheckEnableSave();
 		}
 
@@ -58,6 +67,7 @@ namespace PlexAnimeHelper
 
 		private void OnStopping(object sender, EventArgs e)
 		{
+			return;
 			if (!isSaved && settings != temp)
 			{
 				((FormClosingEventArgs)e).Cancel = MessageBox.Show("Cancel without saving?", "Exit", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) != DialogResult.Yes;

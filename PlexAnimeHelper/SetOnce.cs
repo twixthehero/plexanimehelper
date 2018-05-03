@@ -43,6 +43,38 @@
 			Value = initialValue;
 		}
 
+		public override int GetHashCode()
+		{
+			int hash = 23;
+
+			hash = (hash * 7) + isSet.GetHashCode();
+			hash = (hash * 7) + value.GetHashCode();
+
+			return hash;
+		}
+
+		public override bool Equals(object obj)
+		{
+			if (obj == null || !(obj is SetOnce<T>))
+			{
+				return false;
+			}
+
+			SetOnce<T> other = (SetOnce<T>)obj;
+
+			return isSet == other.isSet && Value.Equals(other.Value);
+		}
+
+		public static bool operator ==(SetOnce<T> s1, SetOnce<T> s2)
+		{
+			return s1.Equals(s2);
+		}
+
+		public static bool operator !=(SetOnce<T> s1, SetOnce<T> s2)
+		{
+			return !s1.Equals(s2);
+		}
+
 		public static implicit operator T(SetOnce<T> value) { return value.Value; }
 	}
 }
