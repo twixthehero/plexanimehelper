@@ -127,6 +127,56 @@ namespace PlexAnimeHelper
 		private Button MoveLeftButton { get { return ((Button)CurrentPage.Controls.Find("leftButton", true)[0]); } }
 		private Button MoveRightButton { get { return ((Button)CurrentPage.Controls.Find("rightButton", true)[0]); } }
 
+		private TextBox GetAnimeNameBox(TabPage page)
+		{
+			return (TextBox)page.Controls.Find("name", true)[0];
+		}
+
+		private NumericUpDown GetSeasonsBox(TabPage page)
+		{
+			return (NumericUpDown)page.Controls.Find("seasons", true)[0];
+		}
+
+		private CheckBox GetAutoMoveBox(TabPage page)
+		{
+			return (CheckBox)page.Controls.Find("autoMoveCheckbox", true)[0];
+		}
+
+		private CheckBox GetAutoScanBox(TabPage page)
+		{
+			return (CheckBox)page.Controls.Find("autoScanCheckbox", true)[0];
+		}
+
+		private ComboBox GetLeftSeasonList(TabPage page)
+		{
+			return (ComboBox)page.Controls.Find("leftSeasonList", true)[0];
+		}
+
+		private ComboBox GetRightSeasonList(TabPage page)
+		{
+			return (ComboBox)page.Controls.Find("rightSeasonList", true)[0];
+		}
+
+		private ListBox GetLeftEpList(TabPage page)
+		{
+			return (ListBox)page.Controls.Find("leftEpList", true)[0];
+		}
+
+		private ListBox GetRightEpList(TabPage page)
+		{
+			return (ListBox)page.Controls.Find("rightEpList", true)[0];
+		}
+
+		private Button GetMoveLeftButton(TabPage page)
+		{
+			return (Button)page.Controls.Find("leftButton", true)[0];
+		}
+
+		private Button GetMoveRightButton(TabPage page)
+		{
+			return (Button)page.Controls.Find("rightButton", true)[0];
+		}
+
 		private void CreatePage()
 		{
 			bool noneOpened = animeTabs.TabCount == 0;
@@ -198,27 +248,42 @@ namespace PlexAnimeHelper
 			RebuildRightEpisodeList();
 		}
 
-		private void RebuildLeftEpisodeList()
+		/// <summary>
+		/// Recreate the episode lists on a given tab page
+		/// </summary>
+		/// <param name="index">Index of tab page to rebuild</param>
+		public void RebuildEpisodeLists(int index)
 		{
-			Log.D("Rebuilding left ep list");
-
-			LeftEpList.Items.Clear();
-			Season s = (Season)LeftSeasonList.SelectedItem;
-			foreach (Episode e in s.Episodes.Values)
-			{
-				LeftEpList.Items.Add(e);
-			}
+			TabPage page = animeTabs.TabPages[index];
+			RebuildEpisodeList(GetLeftSeasonList(page), GetLeftEpList(page));
+			RebuildEpisodeList(GetRightSeasonList(page), GetRightEpList(page));
 		}
 
+		/// <summary>
+		/// Rebuild the currently selected tab page left episode list
+		/// </summary>
+		private void RebuildLeftEpisodeList()
+		{
+			RebuildEpisodeList(LeftSeasonList, LeftEpList);
+		}
+
+		/// <summary>
+		/// Rebuild the currently selected tab page right episode list
+		/// </summary>
 		private void RebuildRightEpisodeList()
 		{
-			Log.D("Rebuilding right ep list");
+			RebuildEpisodeList(RightSeasonList, RightEpList);
+		}
 
-			RightEpList.Items.Clear();
-			Season s = (Season)RightSeasonList.SelectedItem;
+		private void RebuildEpisodeList(ComboBox seasonList, ListBox epList)
+		{
+			Log.D("Rebuilding ep list");
+
+			epList.Items.Clear();
+			Season s = (Season)seasonList.SelectedItem;
 			foreach (Episode e in s.Episodes.Values)
 			{
-				RightEpList.Items.Add(e);
+				epList.Items.Add(e);
 			}
 		}
 
@@ -483,6 +548,12 @@ namespace PlexAnimeHelper
 			WindowState = FormWindowState.Normal;
 		}
 
+		/// <summary>
+		/// Handle keyboard shortcuts
+		/// </summary>
+		/// <param name="msg"></param>
+		/// <param name="keyData"></param>
+		/// <returns></returns>
 		protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
 		{
 			switch (keyData)
@@ -512,6 +583,12 @@ namespace PlexAnimeHelper
 					Log.D("Closing all tabs...");
 					CloseAllTabs();
 					return true;
+				case (Keys.Control | Keys.Left):
+					MoveSelectedTabLeft();
+					return true;
+				case (Keys.Control | Keys.Right):
+					MoveSelectedTabRight();
+					return true;
 			}
 
 			return base.ProcessCmdKey(ref msg, keyData);
@@ -531,6 +608,22 @@ namespace PlexAnimeHelper
 		private void OnStopping(object sender, FormClosingEventArgs e)
 		{
 			taskbarIcon.Visible = false;
+		}
+
+		private void TaskbarIcon_BalloonTipClicked(object sender, EventArgs e)
+		{
+			Show();
+			WindowState = FormWindowState.Normal;
+		}
+
+		private void MoveSelectedTabLeft()
+		{
+			animeTabs.SelectTab((animeTabs.SelectedIndex - 1 + animeTabs.TabCount) % animeTabs.TabCount);
+		}
+
+		private void MoveSelectedTabRight()
+		{
+			animeTabs.SelectTab((animeTabs.SelectedIndex + 1) % animeTabs.TabCount);
 		}
 	}
 }

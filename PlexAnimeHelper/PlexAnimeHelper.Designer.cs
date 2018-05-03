@@ -38,6 +38,7 @@
 			this.addFolderButton = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator4 = new System.Windows.Forms.ToolStripSeparator();
 			this.closeTabButton = new System.Windows.Forms.ToolStripMenuItem();
+			this.closeAllTabsButton = new System.Windows.Forms.ToolStripMenuItem();
 			this.toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
 			this.saveTabButton = new System.Windows.Forms.ToolStripMenuItem();
 			this.saveAllTabsButton = new System.Windows.Forms.ToolStripMenuItem();
@@ -52,7 +53,6 @@
 			this.aboutButton = new System.Windows.Forms.ToolStripMenuItem();
 			this.animeTabs = new System.Windows.Forms.TabControl();
 			this.taskbarIcon = new System.Windows.Forms.NotifyIcon(this.components);
-			this.closeAllTabsButton = new System.Windows.Forms.ToolStripMenuItem();
 			this.menuStrip1.SuspendLayout();
 			this.SuspendLayout();
 			// 
@@ -132,6 +132,15 @@
 			this.closeTabButton.Size = new System.Drawing.Size(224, 22);
 			this.closeTabButton.Text = "Close Tab";
 			this.closeTabButton.Click += new System.EventHandler(this.CloseTab_Click);
+			// 
+			// closeAllTabsButton
+			// 
+			this.closeAllTabsButton.Name = "closeAllTabsButton";
+			this.closeAllTabsButton.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
+            | System.Windows.Forms.Keys.W)));
+			this.closeAllTabsButton.Size = new System.Drawing.Size(224, 22);
+			this.closeAllTabsButton.Text = "Close All Tabs";
+			this.closeAllTabsButton.Click += new System.EventHandler(this.CloseAllTabs_Click);
 			// 
 			// toolStripSeparator2
 			// 
@@ -234,16 +243,8 @@
 			this.taskbarIcon.Icon = ((System.Drawing.Icon)(resources.GetObject("taskbarIcon.Icon")));
 			this.taskbarIcon.Text = "Plex Anime Helper";
 			this.taskbarIcon.Visible = true;
+			this.taskbarIcon.BalloonTipClicked += new System.EventHandler(this.TaskbarIcon_BalloonTipClicked);
 			this.taskbarIcon.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.TrayIcon_MouseDoubleClick);
-			// 
-			// closeAllTabsButton
-			// 
-			this.closeAllTabsButton.Name = "closeAllTabsButton";
-			this.closeAllTabsButton.ShortcutKeys = ((System.Windows.Forms.Keys)(((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift) 
-            | System.Windows.Forms.Keys.W)));
-			this.closeAllTabsButton.Size = new System.Drawing.Size(224, 22);
-			this.closeAllTabsButton.Text = "Close All Tabs";
-			this.closeAllTabsButton.Click += new System.EventHandler(this.CloseAllTabs_Click);
 			// 
 			// PlexAnimeHelper
 			// 

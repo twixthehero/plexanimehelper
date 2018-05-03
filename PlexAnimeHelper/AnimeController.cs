@@ -29,19 +29,33 @@ namespace PlexAnimeHelper
 		private void Scan(object sender, ElapsedEventArgs e)
 		{
 			bool foundNew = false;
+			List<int> newEps = new List<int>();
 
-			foreach (Anime a in animes.Values)
+			foreach (KeyValuePair<int, Anime> pair in animes)
 			{
+				Anime a = pair.Value;
+
 				if (a.AutoScan)
 				{
-					foundNew = a.Scan() || foundNew;
+					bool scanResult = a.Scan();
+
+					if (scanResult)
+					{
+						newEps.Add(pair.Key);
+					}
+
+					foundNew = scanResult || foundNew;
 				}
 			}
 
 			if (foundNew)
 			{
 				helper.ShowTrayNoti("Found new episodes!");
-				helper.RebuildEpisodeLists();
+
+				foreach (int index in newEps)
+				{
+					helper.RebuildEpisodeLists(index);
+				}
 			}
 		}
 
