@@ -461,7 +461,7 @@ namespace PlexAnimeHelper
 
 		private void OnStopping(object sender, FormClosingEventArgs e)
 		{
-			taskbarIcon.Dispose();
+			taskbarIcon.Visible = false;
 		}
 	}
 }
