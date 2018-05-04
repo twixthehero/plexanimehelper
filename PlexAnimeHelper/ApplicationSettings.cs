@@ -42,6 +42,8 @@ namespace PlexAnimeHelper
 		/// </summary>
 		public Dictionary<int, AnimeSettings> AnimeSettings = new Dictionary<int, AnimeSettings>();
 
+		public ELogLevel LogLevel { get; set; } = ELogLevel.DoubleDebug;
+
 		static ApplicationSettings()
 		{
 			APP_DATA = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);

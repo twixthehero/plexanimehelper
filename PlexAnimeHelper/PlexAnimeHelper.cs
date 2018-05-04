@@ -10,7 +10,7 @@ namespace PlexAnimeHelper
 		public static PlexAnimeHelper Instance { get; set; }
 
 		private AnimeController controller;
-		private ContextMenuStrip menu;
+		private ContextMenu menu;
 
 		public PlexAnimeHelper()
 		{
@@ -19,7 +19,25 @@ namespace PlexAnimeHelper
 			InitializeComponent();
 
 			controller = new AnimeController(this);
-			menu = new ContextMenuStrip();
+			menu = new ContextMenu(new MenuItem[] 
+			{
+				new MenuItem("Save", (sender, e) =>
+				{
+					SaveTab_Click(sender, e);
+				}),
+				new MenuItem("Close", (sender, e) =>
+				{
+					CloseTab_Click(sender, e);
+				}),
+				new MenuItem("Close All", (sender, e) =>
+				{
+					CloseAllTabs_Click(sender, e);
+				}),
+				new MenuItem("Close All But This", (sender, e) =>
+				{
+					CloseAllTabsExceptActive();
+				})
+			});
 
 			controller.Init();
 
@@ -293,28 +311,42 @@ namespace PlexAnimeHelper
 			taskbarIcon.ShowBalloonTip(1000);
 		}
 
-		private void CloseActiveTab(bool removeFromWatch = true)
+		private void CloseTab(int index, bool removeFromWatch = true)
 		{
 			if (animeTabs.TabCount > 0)
 			{
-				int selected = animeTabs.SelectedIndex;
-				Log.I($"Closing tab index={selected}");
-				controller.CloseTab(selected, removeFromWatch);
+				Log.D($"Closing tab index={index}");
+				controller.CloseTab(index, removeFromWatch);
 
-				//warning: don't use TabPages.RemoveAt(index), it has some sort of race condition that fucks up shit
 				animeTabs.Selecting -= AnimeTabs_Selecting;
 				animeTabs.Selected -= AnimeTabs_Selected;
 
-				animeTabs.TabPages.Remove(animeTabs.SelectedTab);
+				//warning: don't use TabPages.RemoveAt(index), it has some sort of race condition that fucks up shit
+				animeTabs.TabPages.Remove(animeTabs.TabPages[index]);
 
 				animeTabs.Selecting += AnimeTabs_Selecting;
 				animeTabs.Selected += AnimeTabs_Selected;
 			}
 		}
 
+		private void CloseActiveTab(bool removeFromWatch = true)
+		{
+			CloseTab(animeTabs.SelectedIndex, removeFromWatch);
+		}
+
 		private void CloseAllTabsExceptActive(bool removeFromWatch = true)
 		{
+			int currentSelected = animeTabs.SelectedIndex;
 
+			for (int i = animeTabs.TabCount - 1; i >= 0; i--)
+			{
+				if (i == currentSelected)
+				{
+					continue;
+				}
+				
+				CloseTab(i);
+			}
 		}
 
 		private void CloseAllTabs(bool removeFromWatch = true)
@@ -435,20 +467,7 @@ namespace PlexAnimeHelper
 		#endregion menu bar events
 
 		#region user control events
-
-		private void Episodes_Click(object sender, MouseEventArgs e)
-		{
-			if (e.Button == MouseButtons.Right)
-			{
-				ListView lv = (ListView)sender;
-
-				if (lv.FocusedItem.Bounds.Contains(e.Location))
-				{
-					menu.Show(Cursor.Position);
-				}
-			}
-		}
-
+		
 		private void AnimeName_TextChanged(object sender, EventArgs e)
 		{
 			controller.SetName(AnimeName);
@@ -608,6 +627,7 @@ namespace PlexAnimeHelper
 		private void OnStopping(object sender, FormClosingEventArgs e)
 		{
 			taskbarIcon.Visible = false;
+			taskbarIcon.Icon = null;
 		}
 
 		private void TaskbarIcon_BalloonTipClicked(object sender, EventArgs e)
@@ -624,6 +644,23 @@ namespace PlexAnimeHelper
 		private void MoveSelectedTabRight()
 		{
 			animeTabs.SelectTab((animeTabs.SelectedIndex + 1) % animeTabs.TabCount);
+		}
+
+		private void AnimeTabs_MouseClick(object sender, MouseEventArgs e)
+		{
+			if (e.Button == MouseButtons.Right)
+			{
+				for (int i = 0; i < animeTabs.TabCount; i++)
+				{
+					if (animeTabs.GetTabRect(i).Contains(e.Location))
+					{
+						animeTabs.SelectTab(i);
+						break;
+					}
+				}
+				
+				menu.Show(this, PointToClient(animeTabs.PointToScreen(e.Location)));
+			}
 		}
 	}
 }

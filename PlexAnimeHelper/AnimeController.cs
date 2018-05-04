@@ -21,9 +21,6 @@ namespace PlexAnimeHelper
 		public AnimeController(PlexAnimeHelper helper)
 		{
 			this.helper = helper;
-			watchTimer = new System.Timers.Timer(ApplicationSettings.Instance.RescanTime * 60 * 1000);
-			watchTimer.Elapsed += Scan;
-			watchTimer.Start();
 		}
 
 		private void Scan(object sender, ElapsedEventArgs e)
@@ -61,6 +58,16 @@ namespace PlexAnimeHelper
 
 		public void Init()
 		{
+			if (watchTimer != null)
+			{
+				watchTimer.Stop();
+			}
+
+			watchTimer = new System.Timers.Timer(ApplicationSettings.Instance.RescanTime * 60 * 1000);
+			watchTimer.Elapsed += Scan;
+			watchTimer.Start();
+			Log.D($"Scanning every {watchTimer.Interval}ms");
+
 			LoadData();
 		}
 

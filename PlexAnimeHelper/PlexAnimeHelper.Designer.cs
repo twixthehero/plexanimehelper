@@ -221,7 +221,7 @@
 			// aboutButton
 			// 
 			this.aboutButton.Name = "aboutButton";
-			this.aboutButton.Size = new System.Drawing.Size(107, 22);
+			this.aboutButton.Size = new System.Drawing.Size(180, 22);
 			this.aboutButton.Text = "About";
 			this.aboutButton.Click += new System.EventHandler(this.About_Click);
 			// 
@@ -234,6 +234,7 @@
 			this.animeTabs.TabIndex = 9;
 			this.animeTabs.Selecting += new System.Windows.Forms.TabControlCancelEventHandler(this.AnimeTabs_Selecting);
 			this.animeTabs.Selected += new System.Windows.Forms.TabControlEventHandler(this.AnimeTabs_Selected);
+			this.animeTabs.MouseClick += new System.Windows.Forms.MouseEventHandler(this.AnimeTabs_MouseClick);
 			// 
 			// taskbarIcon
 			// 
