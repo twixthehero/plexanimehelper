@@ -68,10 +68,6 @@ namespace PlexAnimeHelper
 			{
 				((FormClosingEventArgs)e).Cancel = MessageBox.Show("Cancel without saving?", "Exit", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) != DialogResult.Yes;
 			}
-			else
-			{
-				Close();
-			}
 		}
 	}
 }
