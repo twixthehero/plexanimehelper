@@ -200,7 +200,7 @@ namespace PlexAnimeHelper
 			bool noneOpened = animeTabs.TabCount == 0;
 
 			TabPage page = new TabPage();
-			page.Controls.Add(new AnimeTab());
+			page.Controls.Add(new AnimeTab() { Dock = DockStyle.Fill });
 			animeTabs.TabPages.Add(page);
 			animeTabs.SelectTab(animeTabs.TabCount - 1);
 
@@ -561,7 +561,7 @@ namespace PlexAnimeHelper
 			}
 		}
 
-		private void TrayIcon_MouseDoubleClick(object sender, MouseEventArgs e)
+		private void TrayIcon_MouseClick(object sender, MouseEventArgs e)
 		{
 			Show();
 			WindowState = FormWindowState.Normal;

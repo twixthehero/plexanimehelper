@@ -221,12 +221,15 @@
 			// aboutButton
 			// 
 			this.aboutButton.Name = "aboutButton";
-			this.aboutButton.Size = new System.Drawing.Size(180, 22);
+			this.aboutButton.Size = new System.Drawing.Size(107, 22);
 			this.aboutButton.Text = "About";
 			this.aboutButton.Click += new System.EventHandler(this.About_Click);
 			// 
 			// animeTabs
 			// 
+			this.animeTabs.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
 			this.animeTabs.Location = new System.Drawing.Point(13, 27);
 			this.animeTabs.Name = "animeTabs";
 			this.animeTabs.SelectedIndex = 0;
@@ -245,7 +248,7 @@
 			this.taskbarIcon.Text = "Plex Anime Helper";
 			this.taskbarIcon.Visible = true;
 			this.taskbarIcon.BalloonTipClicked += new System.EventHandler(this.TaskbarIcon_BalloonTipClicked);
-			this.taskbarIcon.MouseDoubleClick += new System.Windows.Forms.MouseEventHandler(this.TrayIcon_MouseDoubleClick);
+			this.taskbarIcon.MouseClick += new System.Windows.Forms.MouseEventHandler(this.TrayIcon_MouseClick);
 			// 
 			// PlexAnimeHelper
 			// 
@@ -254,9 +257,11 @@
 			this.ClientSize = new System.Drawing.Size(972, 631);
 			this.Controls.Add(this.menuStrip1);
 			this.Controls.Add(this.animeTabs);
+			this.DoubleBuffered = true;
 			this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
 			this.KeyPreview = true;
 			this.MainMenuStrip = this.menuStrip1;
+			this.MinimumSize = new System.Drawing.Size(500, 650);
 			this.Name = "PlexAnimeHelper";
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
 			this.Text = "PlexAnimeHelper";
