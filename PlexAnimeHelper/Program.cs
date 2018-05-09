@@ -11,9 +11,16 @@ namespace PlexAnimeHelper
 		[STAThread]
 		static void Main()
 		{
-			Application.EnableVisualStyles();
-			Application.SetCompatibleTextRenderingDefault(false);
-			Application.Run(new PlexAnimeHelper());
+			try
+			{
+				Application.EnableVisualStyles();
+				Application.SetCompatibleTextRenderingDefault(false);
+				Application.Run(new PlexAnimeHelper());
+			}
+			catch (Exception e)
+			{
+				Log.E(e);
+			}
 
 			Log.Shutdown();
 		}
