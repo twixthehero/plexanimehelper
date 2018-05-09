@@ -115,7 +115,9 @@ namespace PlexAnimeHelper
 			{
 				Log.D($"Creating shortcut '{shortcutPath}'...");
 				WshShortcut shortcut = new WshShell().CreateShortcut(shortcutPath);
-				shortcut.TargetPath = System.Reflection.Assembly.GetExecutingAssembly().Location;
+				string exe = System.Reflection.Assembly.GetExecutingAssembly().Location;
+				shortcut.TargetPath = exe;
+				shortcut.WorkingDirectory = Path.GetDirectoryName(exe);
 				shortcut.Save();
 			}
 		}
@@ -258,6 +260,7 @@ namespace PlexAnimeHelper
 		public static void Apply(ApplicationSettings settings)
 		{
 			Instance = settings;
+			Save();
 
 			PlexAnimeHelper.Instance.Reinit();
 		}
