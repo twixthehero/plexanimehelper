@@ -23,6 +23,10 @@ namespace PlexAnimeHelper
 			startupBehaviour.SelectedIndex = (int)temp.StartMode;
 			startupBehaviour.SelectedIndexChanged += StartBehaviourChanged;
 
+			closeBehaviour.Items.Add(ECloseBehaviour.Exit);
+			closeBehaviour.Items.Add(ECloseBehaviour.MinimizeTray);
+			closeBehaviour.SelectedIndex = (int)temp.CloseBehaviour;
+
 			rescanTime.Value = temp.RescanTime;
 			rescanTime.ValueChanged += RescanTime_ValueChanged;
 
@@ -47,6 +51,13 @@ namespace PlexAnimeHelper
 		{
 			temp.StartMode = (EStartMode)startupBehaviour.SelectedIndex;
 			Log.D($"StartMode: {temp.StartMode}");
+			CheckEnableSave();
+		}
+
+		private void CloseBehaviourChanged(object sender, EventArgs e)
+		{
+			temp.CloseBehaviour = (ECloseBehaviour)closeBehaviour.SelectedIndex;
+			Log.D($"CloseBehaviour: {temp.CloseBehaviour}");
 			CheckEnableSave();
 		}
 

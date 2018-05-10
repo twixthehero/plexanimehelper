@@ -35,6 +35,8 @@
 			this.startupBehaviour = new System.Windows.Forms.ComboBox();
 			this.rescanTime = new System.Windows.Forms.NumericUpDown();
 			this.label2 = new System.Windows.Forms.Label();
+			this.label3 = new System.Windows.Forms.Label();
+			this.closeBehaviour = new System.Windows.Forms.ComboBox();
 			((System.ComponentModel.ISupportInitialize)(this.rescanTime)).BeginInit();
 			this.SuspendLayout();
 			// 
@@ -78,7 +80,7 @@
 			// 
 			// rescanTime
 			// 
-			this.rescanTime.Location = new System.Drawing.Point(366, 38);
+			this.rescanTime.Location = new System.Drawing.Point(365, 64);
 			this.rescanTime.Maximum = new decimal(new int[] {
             1440,
             0,
@@ -103,17 +105,38 @@
 			// label2
 			// 
 			this.label2.AutoSize = true;
-			this.label2.Location = new System.Drawing.Point(16, 44);
+			this.label2.Location = new System.Drawing.Point(12, 66);
 			this.label2.Name = "label2";
 			this.label2.Size = new System.Drawing.Size(119, 13);
 			this.label2.TabIndex = 5;
 			this.label2.Text = "Rescan Time (Minutes):";
+			// 
+			// label3
+			// 
+			this.label3.AutoSize = true;
+			this.label3.Location = new System.Drawing.Point(13, 40);
+			this.label3.Name = "label3";
+			this.label3.Size = new System.Drawing.Size(87, 13);
+			this.label3.TabIndex = 6;
+			this.label3.Text = "Close Behaviour:";
+			// 
+			// closeBehaviour
+			// 
+			this.closeBehaviour.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+			this.closeBehaviour.FormattingEnabled = true;
+			this.closeBehaviour.Location = new System.Drawing.Point(366, 37);
+			this.closeBehaviour.Name = "closeBehaviour";
+			this.closeBehaviour.Size = new System.Drawing.Size(155, 21);
+			this.closeBehaviour.TabIndex = 7;
+			this.closeBehaviour.SelectedValueChanged += new System.EventHandler(this.CloseBehaviourChanged);
 			// 
 			// SettingsControl
 			// 
 			this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
 			this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
 			this.ClientSize = new System.Drawing.Size(534, 361);
+			this.Controls.Add(this.closeBehaviour);
+			this.Controls.Add(this.label3);
 			this.Controls.Add(this.label2);
 			this.Controls.Add(this.rescanTime);
 			this.Controls.Add(this.startupBehaviour);
@@ -139,5 +162,7 @@
 		private System.Windows.Forms.ComboBox startupBehaviour;
 		private System.Windows.Forms.NumericUpDown rescanTime;
 		private System.Windows.Forms.Label label2;
+		private System.Windows.Forms.Label label3;
+		private System.Windows.Forms.ComboBox closeBehaviour;
 	}
 }

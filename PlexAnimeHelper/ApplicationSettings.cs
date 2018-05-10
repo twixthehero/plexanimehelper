@@ -44,6 +44,8 @@ namespace PlexAnimeHelper
 
 		public ELogLevel LogLevel { get; set; } = ELogLevel.DoubleDebug;
 
+		public ECloseBehaviour CloseBehaviour { get; set; } = ECloseBehaviour.MinimizeTray;
+
 		static ApplicationSettings()
 		{
 			APP_DATA = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
@@ -182,7 +184,7 @@ namespace PlexAnimeHelper
 			ApplicationSettings other = (ApplicationSettings)obj;
 
 			if (Version != other.Version || StartMode != other.StartMode ||
-				RescanTime != other.RescanTime)
+				RescanTime != other.RescanTime || CloseBehaviour != other.CloseBehaviour)
 			{
 				return false;
 			}

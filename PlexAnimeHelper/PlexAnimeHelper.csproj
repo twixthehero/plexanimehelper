@@ -69,6 +69,7 @@
     <Compile Include="AnimeTab.Designer.cs">
       <DependentUpon>AnimeTab.cs</DependentUpon>
     </Compile>
+    <Compile Include="ECloseBehaviour.cs" />
     <Compile Include="ELogLevel.cs" />
     <Compile Include="Episode.cs" />
     <Compile Include="EStartMode.cs" />

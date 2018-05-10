@@ -11,7 +11,8 @@ namespace PlexAnimeHelper
 		public static PlexAnimeHelper Instance { get; set; }
 
 		private AnimeController controller;
-		private ContextMenu menu;
+		private ContextMenu tabMenu;
+		private ContextMenu iconMenu;
 
 		public PlexAnimeHelper()
 		{
@@ -20,7 +21,7 @@ namespace PlexAnimeHelper
 			InitializeComponent();
 
 			controller = new AnimeController(this);
-			menu = new ContextMenu(new MenuItem[] 
+			tabMenu = new ContextMenu(new MenuItem[] 
 			{
 				new MenuItem("Save", (sender, e) =>
 				{
@@ -39,6 +40,22 @@ namespace PlexAnimeHelper
 					CloseAllTabsExceptActive();
 				})
 			});
+
+			iconMenu = new ContextMenu(new MenuItem[]
+			{
+				new MenuItem("Show", (sender, e) =>
+				{
+					Show();
+					WindowState = FormWindowState.Normal;
+				}),
+				new MenuItem("Quit", (sender, e) =>
+				{
+					taskbarIcon.Visible = false;
+					taskbarIcon.Icon = null;
+					Environment.Exit(0);
+				})
+			});
+			taskbarIcon.ContextMenu = iconMenu;
 
 			controller.Init();
 
@@ -456,6 +473,8 @@ namespace PlexAnimeHelper
 
 		private void Exit_Click(object sender, EventArgs e)
 		{
+			taskbarIcon.Visible = false;
+			taskbarIcon.Icon = null;
 			Environment.Exit(0);
 		}
 
@@ -567,8 +586,11 @@ namespace PlexAnimeHelper
 
 		private void TrayIcon_MouseClick(object sender, MouseEventArgs e)
 		{
-			Show();
-			WindowState = FormWindowState.Normal;
+			if (e.Button == MouseButtons.Left)
+			{
+				Show();
+				WindowState = FormWindowState.Normal;
+			}
 		}
 
 		/// <summary>
@@ -630,8 +652,17 @@ namespace PlexAnimeHelper
 
 		private void OnStopping(object sender, FormClosingEventArgs e)
 		{
-			taskbarIcon.Visible = false;
-			taskbarIcon.Icon = null;
+			switch (ApplicationSettings.Instance.CloseBehaviour)
+			{
+				case ECloseBehaviour.Exit:
+					taskbarIcon.Visible = false;
+					taskbarIcon.Icon = null;
+					break;
+				case ECloseBehaviour.MinimizeTray:
+					e.Cancel = true;
+					WindowState = FormWindowState.Minimized;
+					break;
+			}
 		}
 
 		private void TaskbarIcon_BalloonTipClicked(object sender, EventArgs e)
@@ -663,7 +694,7 @@ namespace PlexAnimeHelper
 					}
 				}
 				
-				menu.Show(this, PointToClient(animeTabs.PointToScreen(e.Location)));
+				tabMenu.Show(this, PointToClient(animeTabs.PointToScreen(e.Location)));
 			}
 		}
 	}
