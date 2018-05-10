@@ -48,6 +48,12 @@ namespace PlexAnimeHelper
 					Show();
 					WindowState = FormWindowState.Normal;
 				}),
+				new MenuItem("Hide", (sender, e) =>
+				{
+					Hide();
+					WindowState = FormWindowState.Minimized;
+					taskbarIcon.ShowBalloonTip(1000);
+				}),
 				new MenuItem("Quit", (sender, e) =>
 				{
 					taskbarIcon.Visible = false;
@@ -574,16 +580,7 @@ namespace PlexAnimeHelper
 		}
 
 		#endregion user control events
-
-		private void PlexAnimeHelper_Resize(object sender, EventArgs e)
-		{
-			if (WindowState == FormWindowState.Minimized)
-			{
-				Hide();
-				taskbarIcon.ShowBalloonTip(1000);
-			}
-		}
-
+		
 		private void TrayIcon_MouseClick(object sender, MouseEventArgs e)
 		{
 			if (e.Button == MouseButtons.Left)
@@ -661,6 +658,8 @@ namespace PlexAnimeHelper
 				case ECloseBehaviour.MinimizeTray:
 					e.Cancel = true;
 					WindowState = FormWindowState.Minimized;
+					Hide();
+					taskbarIcon.ShowBalloonTip(1000);
 					break;
 			}
 		}

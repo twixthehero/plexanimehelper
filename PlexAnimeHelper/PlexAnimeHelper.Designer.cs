@@ -265,7 +265,6 @@
 			this.Name = "PlexAnimeHelper";
 			this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
 			this.Text = "PlexAnimeHelper";
-			this.Resize += new System.EventHandler(this.PlexAnimeHelper_Resize);
 			this.menuStrip1.ResumeLayout(false);
 			this.menuStrip1.PerformLayout();
 			this.ResumeLayout(false);
