@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Windows.Forms;
 
 namespace PlexAnimeHelper
@@ -46,14 +47,17 @@ namespace PlexAnimeHelper
 				AnimeTabs_Selected(this, new TabControlEventArgs(CurrentPage, animeTabs.TabCount - 1, TabControlAction.Selected));
 			}
 
-			switch (ApplicationSettings.Instance.StartMode)
+			if (!Debugger.IsAttached)
 			{
-				case EStartMode.Minimized:
-					WindowState = FormWindowState.Minimized;
-					break;
-				case EStartMode.Maximized:
-					WindowState = FormWindowState.Maximized;
-					break;
+				switch (ApplicationSettings.Instance.StartMode)
+				{
+					case EStartMode.Minimized:
+						WindowState = FormWindowState.Minimized;
+						break;
+					case EStartMode.Maximized:
+						WindowState = FormWindowState.Maximized;
+						break;
+				}
 			}
 
 			FormClosing += OnStopping;
