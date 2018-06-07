@@ -649,18 +649,21 @@ namespace PlexAnimeHelper
 
 		private void OnStopping(object sender, FormClosingEventArgs e)
 		{
-			switch (ApplicationSettings.Instance.CloseBehaviour)
+			if (!Debugger.IsAttached)
 			{
-				case ECloseBehaviour.Exit:
-					taskbarIcon.Visible = false;
-					taskbarIcon.Icon = null;
-					break;
-				case ECloseBehaviour.MinimizeTray:
-					e.Cancel = true;
-					WindowState = FormWindowState.Minimized;
-					Hide();
-					taskbarIcon.ShowBalloonTip(1000);
-					break;
+				switch (ApplicationSettings.Instance.CloseBehaviour)
+				{
+					case ECloseBehaviour.Exit:
+						taskbarIcon.Visible = false;
+						taskbarIcon.Icon = null;
+						break;
+					case ECloseBehaviour.MinimizeTray:
+						e.Cancel = true;
+						WindowState = FormWindowState.Minimized;
+						Hide();
+						taskbarIcon.ShowBalloonTip(1000);
+						break;
+				}
 			}
 		}
 
